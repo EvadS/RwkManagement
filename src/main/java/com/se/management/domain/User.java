@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,13 @@ public class User extends Auditable<String> implements Serializable {
 
     @NotNull
     @Size(max = 100)
-    private String name;
+    private String firstName;
+
+    @NotNull
+    @Size(max = 100)
+    private String lastName;
+
+    private Date reviewDate;
 
     @NotNull
     @Email

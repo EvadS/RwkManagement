@@ -1,4 +1,4 @@
-package com.se.management;
+package com.se.management.model.enums;
 
 import java.util.stream.Stream;
 

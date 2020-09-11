@@ -1,6 +1,6 @@
-package com.se.management.converters;
+package com.se.management.model.converters;
 
-import com.se.management.SkillName;
+import com.se.management.model.enums.SkillName;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
