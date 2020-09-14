@@ -2,7 +2,10 @@ package com.se.management.domain;
 
 import com.se.management.model.enums.SkillName;
 import com.se.management.model.converters.SkillNameConverter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -11,6 +14,9 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class Skill {
 
     @Id
@@ -22,17 +28,16 @@ public class Skill {
 
     @NotNull
     @Convert(converter = SkillNameConverter.class)
-    private SkillName skillName;
+    private SkillName skillName = SkillName.NOT_SET;
+
 
     @Min(0)
     @Max(10)
-    private String scores;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private byte score;
 
-    public Skill() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "searcher_id", nullable = false)
+    private Searcher searcher;
 
 
 }

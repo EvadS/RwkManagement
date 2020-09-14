@@ -2,7 +2,10 @@ package com.se.management.domain;
 
 
 import com.se.management.domain.base.Auditable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +19,10 @@ import java.util.Set;
 @Data
 @Entity
 @Table
-public class User extends Auditable<String> implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
+public class Searcher extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,25 +40,22 @@ public class User extends Auditable<String> implements Serializable {
     @NotNull
     @Email
     @Size(max = 100)
-    @Column(unique = true)
+
+    // TODO: commented for testing
+//    @Column(unique = true)
     private String email;
 
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_addresses", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "searcher_addresses", joinColumns = @JoinColumn(name = "searcher_id"))
     @AttributeOverrides({
             @AttributeOverride(name = "addressLine1", column = @Column(name = "house_number")),
             @AttributeOverride(name = "addressLine2", column = @Column(name = "street"))
     })
     private Set<Address> addresses = new HashSet<>();
 
-//
-
-    public User() {
-
+    public Set<Address> addAddress(Address address) {
+        addresses.add(address);
+        return this.addresses;
     }
-
-
-
-    // Getters and Setters (Omitted for brevity)
 }

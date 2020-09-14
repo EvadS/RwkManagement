@@ -5,16 +5,14 @@ import com.se.management.model.enums.MessengerType;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-
-
 @Converter(autoApply = true)
 public class MessengerTypeConverter implements AttributeConverter<MessengerType, String> {
     @Override
-    public String convertToDatabaseColumn(MessengerType paymentMethod) {
-        if (paymentMethod == null) {
+    public String convertToDatabaseColumn(MessengerType messengerType) {
+        if (messengerType == null) {
             return null;
         }
-        return paymentMethod.getName();
+        return messengerType.getName();
     }
 
     @Override

@@ -3,7 +3,8 @@ package com.se.management.model.enums;
 import java.util.stream.Stream;
 
 public enum SkillName {
-    Cpp(1, "C++"),
+    NOT_SET(0, "NOT SET"),
+    Cpp(1, "Cpp"),
     Java(2, "JAVA"),
     SQL(1, "SQL");
 
@@ -17,7 +18,7 @@ public enum SkillName {
 
     public static SkillName of(String code) {
         return Stream.of(SkillName.values())
-                .filter(p -> p.getName() == code)
+                .filter(p -> p.getName().equals(code))
                 .findFirst().orElseThrow(() -> new IllegalStateException(String.format("Unsupported type %s.", code)));
     }
 

@@ -22,13 +22,12 @@ public class ContactInfo {
     @Convert(converter = MessengerTypeConverter.class)
     private MessengerType messengerType;
 
-    @Min(0)
-    @Max(10)
-    private String address;
+    @NotNull
+    private String messengerAddress;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "searcher_id", nullable = false)
+    private Searcher searcher;
 
     public ContactInfo() {
     }

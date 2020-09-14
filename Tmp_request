@@ -1,0 +1,16 @@
+{
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "reviewDate": 0,
+  "skillRequestList": [
+    {
+      "address": "teset",
+      "messengerType": "ICQ"
+    },
+    {
+      "address": "AIM_test",
+      "messengerType": "AIM"
+    }
+  ]
+}
