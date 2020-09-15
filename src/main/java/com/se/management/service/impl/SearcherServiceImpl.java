@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,16 +44,12 @@ public class SearcherServiceImpl implements SearcherService {
 
     @Transactional
     @Override
-    public SearcherResponse create(SearcherRequest searcherRequest) {
+    public SearcherResponse create(@Valid SearcherRequest searcherRequest) {
 
-        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkillScoreRequestList();
+        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
 
         List<SkillsScore> skillsScoreList = skillsRequestList.stream().
                 map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
-
-        List<ContactInfo> contactInfoList = searcherRequest.getContactInfos().stream().
-                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
-                .collect(Collectors.toList());
 
         Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
 
@@ -69,10 +66,14 @@ public class SearcherServiceImpl implements SearcherService {
 
         searcherRepository.save(searcher);
 
-        contactInfoList.stream().forEach(it -> {
-            it.setSearcher(searcher);
-            contactInfoRepository.save(it);
-        });
+//        List<ContactInfo> contactInfoList = searcherRequest.getContactInfos().stream().
+//                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
+//                .collect(Collectors.toList());
+//
+//        contactInfoList.stream().forEach(it -> {
+//            it.setSearcher(searcher);
+//            contactInfoRepository.save(it);
+//        });
 
 
 
@@ -108,7 +109,7 @@ public class SearcherServiceImpl implements SearcherService {
         searcherRepository.save(searcher);
 
         // new skills
-        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkillScoreRequestList().stream().
+        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkills().stream().
                 map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
 
         // TODO: many-to -many migration

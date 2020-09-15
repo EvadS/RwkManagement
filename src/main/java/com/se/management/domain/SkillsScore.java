@@ -34,15 +34,10 @@ public class SkillsScore {
     @Max(10)
     private byte score;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "searcher_id", nullable = false)
-//    private Searcher searcher;
     @ManyToMany
     @JoinTable(name="searcher_skills",
             joinColumns=@JoinColumn(name="skills_score_id"),
             inverseJoinColumns=@JoinColumn(name="searcher_id"))
-
-
     private Set<Searcher> searchers = new HashSet<>();
 
     public void removeChildSearcher(Searcher s) {

@@ -21,11 +21,7 @@ public class Skill {
     private String name;
 
     @OneToMany(mappedBy = "skill"
-            // ,cascade = CascadeType.ALL
-            ,fetch = FetchType.LAZY
-            // ,orphanRemoval = true
-    )
+            ,fetch = FetchType.LAZY)
     private Set<SkillsScore> skillsScores = new HashSet<SkillsScore>();
-
 }
 

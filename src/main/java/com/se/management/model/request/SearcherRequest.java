@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -14,21 +15,29 @@ import java.util.List;
 @AllArgsConstructor
 public class SearcherRequest {
 
-    AddressRequest addressRequest;
+    private AddressRequest addressRequest;
+
     @NotNull
     @Size(max = 100)
     private String firstName;
+
     @NotNull
     @Size(max = 100)
     private String lastName;
-    private Long reviewDate;
-    @NotNull
 
+    private Long reviewDate;
+
+    @NotNull
     // TODO: for test
     // @Email
     @Size(max = 100)
     private String email;
-    private List<SkillScoreRequest> skillScoreRequestList = new ArrayList<>();
+
+   // @Valid not recommended
+    @Valid
+    @NotNull(message="skills list attributes are required")
+    private  List<@Valid SkillScoreRequest> skills = new ArrayList<>();
+
 
     private List<ContactInfoRequest> contactInfos = new ArrayList<>();
 }

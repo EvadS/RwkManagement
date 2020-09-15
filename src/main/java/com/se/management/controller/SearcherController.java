@@ -1,5 +1,6 @@
 package com.se.management.controller;
 
+
 import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
@@ -10,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/searcher")
+@Validated
 public class SearcherController {
 
     private final Logger logger = LoggerFactory.getLogger(SearcherController.class);
@@ -26,8 +31,7 @@ public class SearcherController {
     private SearcherService searcherService;
 
     @PostMapping()
-    public ResponseEntity<SearcherResponse> createSearcher(@RequestBody SearcherRequest searcherRequest) {
-
+    public ResponseEntity<SearcherResponse> createSearcher(@Valid @RequestBody  SearcherRequest searcherRequest) {
         logger.debug("Handle create request ");
 
         SearcherResponse response = searcherService.create(searcherRequest);
@@ -35,11 +39,11 @@ public class SearcherController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SearcherResponse> updatePromoBanner(@PathVariable(value = "id") Long searcherId,
-                                            @Valid @RequestBody SearcherRequest searcherRequest) {
+    public ResponseEntity<SearcherResponse> updateSearcher(@PathVariable(value = "id") Long searcherId,
+                                                              @Valid @RequestBody SearcherRequest searcherRequest) {
         logger.debug("Handle update request to searcher : {}", searcherId);
 
-        SearcherResponse response = searcherService.update(searcherId,searcherRequest);
+        SearcherResponse response = searcherService.update(searcherId, searcherRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -62,4 +66,13 @@ public class SearcherController {
         Page<SearcherListItem> searcherListItemPage = searcherService.search(pageable);
         return ResponseEntity.ok(searcherListItemPage);
     }
+
+    // TODO: temporary
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    String handleConstraintViolationException(ConstraintViolationException e) {
+        return "not valid due to validation error: " + e.getMessage();
+    }
+
 }
