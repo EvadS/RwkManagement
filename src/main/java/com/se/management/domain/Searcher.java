@@ -12,13 +12,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -53,6 +50,27 @@ public class Searcher extends Auditable<String> implements Serializable {
             @AttributeOverride(name = "addressLine2", column = @Column(name = "street"))
     })
     private Set<Address> addresses = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "searcher_skills",
+            joinColumns = { @JoinColumn(name = "searcher_id") },
+            inverseJoinColumns = { @JoinColumn(name = "skill_id") })
+    private Set<Skill> skills = new HashSet<>();
+
+    public Set<Skill> addSkill(Skill skill) {
+        skills.add(skill);
+        return this.skills;
+    }
+
+    public void removeSkill(Skill skill) {
+        skills.remove(skill);
+        skill.setSearchers(null);
+    }
 
     public Set<Address> addAddress(Address address) {
         addresses.add(address);

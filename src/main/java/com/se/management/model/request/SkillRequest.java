@@ -8,14 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Convert;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 public class SkillRequest {
-    @NotNull
-    @Convert(converter = SkillNameConverter.class)
-    private SkillName skillName;
+
+    @NotBlank
+    private String skillName;
 
     @Min(0)
     @Max(10)

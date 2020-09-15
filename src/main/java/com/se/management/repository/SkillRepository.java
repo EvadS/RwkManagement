@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-    List<Skill> findTop3BySearcherIdOrderByScoreDesc(long searcherId);
+   // List<Skill> findTop3BySearcherIdOrderByScoreDesc(long searcherId);
 
-    List<Skill> findBySearcherId(long searcherId);
+//     List<Skill> findBySearcherId(long searcherId);
+
+  //  List<Class> findAllBySkillName(String skillName);
 }
