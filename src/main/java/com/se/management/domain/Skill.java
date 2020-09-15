@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "skill_item")
+@Table(name = "skill")
 @Data
 public class Skill {
 

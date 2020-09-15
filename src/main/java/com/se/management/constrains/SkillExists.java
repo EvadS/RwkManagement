@@ -16,8 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {SkillExistsValidator.class})
 public @interface SkillExists {
 
-    String message() default "Skill doesn't exists";//"{id.invalid}"
-
+    String message() default "{id.invalid}";
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

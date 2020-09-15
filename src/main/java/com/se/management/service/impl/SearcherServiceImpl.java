@@ -1,10 +1,7 @@
 package com.se.management.service.impl;
 
 
-import com.se.management.domain.Address;
-import com.se.management.domain.ContactInfo;
-import com.se.management.domain.Searcher;
-import com.se.management.domain.SkillsScore;
+import com.se.management.domain.*;
 import com.se.management.exception.SearcherNotFoundException;
 import com.se.management.mapper.*;
 import com.se.management.model.request.SearcherRequest;
@@ -13,6 +10,7 @@ import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
 import com.se.management.repository.ContactInfoRepository;
 import com.se.management.repository.SearcherRepository;
+import com.se.management.repository.SkillRepository;
 import com.se.management.repository.SkillsScoreRepository;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
@@ -42,6 +40,9 @@ public class SearcherServiceImpl implements SearcherService {
     @Autowired
     private SkillsScoreRepository skillsScoreRepository;
 
+    @Autowired
+    SkillRepository skillRepo;
+
     @Transactional
     @Override
     public SearcherResponse create(@Valid SearcherRequest searcherRequest) {
@@ -58,11 +59,23 @@ public class SearcherServiceImpl implements SearcherService {
 
         searcherRepository.save(searcher);
 
-        // TODO: check is skill name exists
-        for(SkillsScore item: skillsScoreList){
-            item.addSearcher(searcher);
-            skillsScoreRepository.save(item);
+        for(SkillScoreRequest item : skillsRequestList){
+            SkillsScore skillsScore = new SkillsScore();
+            skillsScore.setScore(item.getScore());
+
+            Skill skill = skillRepo.getOne(item.getSkillId());
+
+            skillsScore.setSkill(skill);
+            skillsScore.addSearcher(searcher);
+
+            skillsScoreRepository.save(skillsScore);
+
         }
+        // TODO: check is skill name exists
+//        for(SkillsScore item: skillsScoreList){
+//            item.addSearcher(searcher);
+//            skillsScoreRepository.save(item);
+//        }
 
         searcherRepository.save(searcher);
 
