@@ -13,10 +13,10 @@ public interface SkillMapper {
 
     SkillMapper INSTANCE = Mappers.getMapper(SkillMapper.class);
 
-    @Mappings({
-            @Mapping(target = "score", source = "score"),
-            @Mapping(target = "name", source = "skillName")
-    })
+//    @Mappings({
+//            @Mapping(target = "score", source = "score"),
+//            @Mapping(target = "name", source = "skillName")
+//    })
     SkillsScore SkillRequestToSkill(SkillRequest request);
 
     SkillResponse SkillToSkillResponse(SkillsScore skillsScore);

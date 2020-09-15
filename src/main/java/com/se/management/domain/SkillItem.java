@@ -17,6 +17,7 @@ public class SkillItem {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "skill"

@@ -1,7 +1,5 @@
 package com.se.management.model.response;
 
-import com.se.management.model.converters.SkillNameConverter;
-import com.se.management.model.enums.SkillName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,8 +10,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class SkillResponse {
     @NotNull
-    @Convert(converter = SkillNameConverter.class)
-    private SkillName skillName = SkillName.NOT_SET;
+    private String skillName;
 
     private byte score;
 }

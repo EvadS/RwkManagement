@@ -1,7 +1,5 @@
 package com.se.management.domain;
 
-import com.se.management.model.enums.SkillName;
-import com.se.management.model.converters.SkillNameConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
