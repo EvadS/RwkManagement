@@ -6,17 +6,14 @@ import com.se.management.domain.ContactInfo;
 import com.se.management.domain.Searcher;
 import com.se.management.domain.SkillsScore;
 import com.se.management.exception.SearcherNotFoundException;
-import com.se.management.mapper.AddressMapper;
-import com.se.management.mapper.ContactMapper;
-import com.se.management.mapper.SearcherMapper;
-import com.se.management.mapper.SkillMapper;
+import com.se.management.mapper.*;
 import com.se.management.model.request.SearcherRequest;
-import com.se.management.model.request.SkillRequest;
+import com.se.management.model.request.SkillScoreRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
 import com.se.management.repository.ContactInfoRepository;
 import com.se.management.repository.SearcherRepository;
-import com.se.management.repository.SkillRepository;
+import com.se.management.repository.SkillsScoreRepository;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +39,16 @@ public class SearcherServiceImpl implements SearcherService {
     private ContactInfoRepository contactInfoRepository;
 
     @Autowired
-    private SkillRepository skillRepository;
+    private SkillsScoreRepository skillsScoreRepository;
 
     @Transactional
     @Override
     public SearcherResponse create(SearcherRequest searcherRequest) {
 
-        List<SkillRequest> skillsRequestList = searcherRequest.getSkillRequestList();
+        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkillScoreRequestList();
 
         List<SkillsScore> skillsScoreList = skillsRequestList.stream().
-                map(SkillMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
+                map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
 
         List<ContactInfo> contactInfoList = searcherRequest.getContactInfos().stream().
                 map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
@@ -67,7 +64,7 @@ public class SearcherServiceImpl implements SearcherService {
         // TODO: check is skill name exists
         for(SkillsScore item: skillsScoreList){
             item.addSearcher(searcher);
-            skillRepository.save(item);
+            skillsScoreRepository.save(item);
         }
 
         searcherRepository.save(searcher);
@@ -111,8 +108,8 @@ public class SearcherServiceImpl implements SearcherService {
         searcherRepository.save(searcher);
 
         // new skills
-        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkillRequestList().stream().
-                map(SkillMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
+        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkillScoreRequestList().stream().
+                map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
 
         // TODO: many-to -many migration
         // remove currents

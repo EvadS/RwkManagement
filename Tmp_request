@@ -3,7 +3,7 @@
   "firstName": "string",
   "lastName": "string",
   "reviewDate": 0,
-  "skillRequestList": [
+  "skillScoreRequestList": [
     {
       "address": "teset",
       "messengerType": "ICQ"

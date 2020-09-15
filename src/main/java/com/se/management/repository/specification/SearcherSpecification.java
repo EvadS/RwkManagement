@@ -2,22 +2,11 @@ package com.se.management.repository.specification;
 
 import com.se.management.domain.Searcher;
 import com.se.management.model.SearcherSearch;
-import com.se.management.repository.SkillRepository;
+import com.se.management.repository.SkillsScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.SetJoin;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -25,7 +14,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 public class SearcherSpecification extends SearchSpecification<Searcher, SearcherSearch>{
 
     @Autowired
-    SkillRepository skillRepository;
+    SkillsScoreRepository skillsScoreRepository;
 
     @Override
     public Specification<Searcher> getFilter(SearcherSearch request) {

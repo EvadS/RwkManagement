@@ -2,12 +2,10 @@ package com.se.management.controller;
 
 
 import com.se.management.controller.base.SkillsControllerBase;
-import com.se.management.domain.SkillItem;
 import com.se.management.model.SkillSearch;
-import com.se.management.model.request.SkillItemRequest;
 import com.se.management.model.request.SkillRequest;
-import com.se.management.model.response.SkillItemResponse;
-import com.se.management.service.SkillItemService;
+import com.se.management.model.response.SkillResponse;
+import com.se.management.service.SkillService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,40 +20,40 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/skills")
 public class SkillsController implements SkillsControllerBase {
-    private final SkillItemService skillItemService;
+    private final SkillService skillService;
 
-    public SkillsController(SkillItemService skillItemService) {
-        this.skillItemService = skillItemService;
+    public SkillsController(SkillService skillService) {
+        this.skillService = skillService;
     }
 
     @Override
-    public ResponseEntity<Page<SkillItemResponse>> filter(@NotNull SkillSearch request, Pageable pageable) {
-        Page<SkillItemResponse> bannerResponseList = skillItemService.filter(request, pageable);
+    public ResponseEntity<Page<SkillResponse>> filter(@NotNull SkillSearch request, Pageable pageable) {
+        Page<SkillResponse> bannerResponseList = skillService.filter(request, pageable);
         return ResponseEntity.ok(bannerResponseList);
     }
 
     @Override
-    public ResponseEntity<SkillItemResponse> getSkillById(Long skillId) {
-        SkillItemResponse skillItemResponse = skillItemService.getById(skillId);
-        return ResponseEntity.ok(skillItemResponse);
+    public ResponseEntity<SkillResponse> getSkillById(Long skillId) {
+        SkillResponse skillResponse = skillService.getById(skillId);
+        return ResponseEntity.ok(skillResponse);
     }
 
     @Override
-    public ResponseEntity<SkillItemResponse> updateSkill(@NotNull Long skillId, SkillItemRequest skillRequest) {
-        SkillItemResponse skillItemResponse = skillItemService.update(skillId, skillRequest);
-        return new ResponseEntity<>(skillItemResponse, HttpStatus.ACCEPTED);
+    public ResponseEntity<SkillResponse> updateSkill(@NotNull Long skillId, SkillRequest skillRequest) {
+        SkillResponse skillResponse = skillService.update(skillId, skillRequest);
+        return new ResponseEntity<>(skillResponse, HttpStatus.ACCEPTED);
     }
 
     @Override
-    public ResponseEntity<SkillItemResponse> createSkill(@Valid @RequestBody SkillItemRequest skillRequest) {
+    public ResponseEntity<SkillResponse> createSkill(@Valid @RequestBody SkillRequest skillRequest) {
 
-        SkillItemResponse skillItemResponse = skillItemService.create(skillRequest);
-        return new ResponseEntity<>(skillItemResponse, HttpStatus.CREATED);
+        SkillResponse skillResponse = skillService.create(skillRequest);
+        return new ResponseEntity<>(skillResponse, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<SkillItemResponse> deleteSkill(@NotNull Long skillId) {
-        boolean bannerResponse = skillItemService.delete(skillId);
+    public ResponseEntity<SkillResponse> deleteSkill(@NotNull Long skillId) {
+        boolean bannerResponse = skillService.delete(skillId);
         return new ResponseEntity(bannerResponse, HttpStatus.ACCEPTED);
     }
 }

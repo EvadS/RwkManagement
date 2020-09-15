@@ -28,7 +28,7 @@ public class SearcherRequest {
     // @Email
     @Size(max = 100)
     private String email;
-    private List<SkillRequest> skillRequestList = new ArrayList<>();
+    private List<SkillScoreRequest> skillScoreRequestList = new ArrayList<>();
 
     private List<ContactInfoRequest> contactInfos = new ArrayList<>();
 }

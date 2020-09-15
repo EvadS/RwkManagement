@@ -19,5 +19,5 @@ public class SearcherListItem {
     private String lName;
     private String fName;
 
-    private List<SkillResponse> tolSkillList = new ArrayList<>();
+    private List<SkillScoreResponse> tolSkillList = new ArrayList<>();
 }

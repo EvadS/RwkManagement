@@ -28,7 +28,7 @@ public class SkillsScore {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "skill_id", nullable = true)
-    private SkillItem skill;
+    private Skill skill;
 
     @Min(0)
     @Max(10)

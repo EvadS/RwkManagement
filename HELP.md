@@ -38,7 +38,7 @@ http://localhost:8080/searcher
   "firstName": "first name 111112",
   "lastName": "last name 2",
   "reviewDate": 0,
-  "skillRequestList": [
+  "skillScoreRequestList": [
     {
       "score": 1,
       "skillName": "Cpp"

@@ -1,9 +1,8 @@
 package com.se.management.controller.base;
 
 import com.se.management.model.SkillSearch;
-import com.se.management.model.request.SkillItemRequest;
 import com.se.management.model.request.SkillRequest;
-import com.se.management.model.response.SkillItemResponse;
+import com.se.management.model.response.SkillResponse;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,35 +35,35 @@ public interface SkillsControllerBase {
     @ApiOperation(value = "Search and paging",
             notes = "Filterable + sortable + pageable list", tags = {})
     @GetMapping("/search")
-    ResponseEntity<Page<SkillItemResponse>> filter(@NotNull final SkillSearch request, Pageable pageable);
+    ResponseEntity<Page<SkillResponse>> filter(@NotNull final SkillSearch request, Pageable pageable);
 
 
     @ApiOperation(value = "Skill details", notes = "Skill details by id", tags = {})
     @GetMapping(value = "/{id}")
-    ResponseEntity<SkillItemResponse> getSkillById(
+    ResponseEntity<SkillResponse> getSkillById(
             @ApiParam(value = "User unique identifier", required = true)
             @PathVariable(value = "id") Long id);
 
     @ApiOperation(value = "Create skill", nickname = "create",
             notes = "Create skill by id", tags = {})
     @PostMapping
-    ResponseEntity<SkillItemResponse> createSkill(@Valid @RequestBody
+    ResponseEntity<SkillResponse> createSkill(@Valid @RequestBody
                                                   @ApiParam(value = "skill details for update", required = true)
-                                                          SkillItemRequest skillRequest);
+                                                          SkillRequest skillRequest);
 
     @ApiOperation(value = "Update skill", nickname = "update",
             notes = "Update skill by id", tags = {})
     @PutMapping(value = "/{id}")
-    ResponseEntity<SkillItemResponse> updateSkill(
+    ResponseEntity<SkillResponse> updateSkill(
             @ApiParam(value = "skill unique identifier", required = true)
             @PathVariable(value = "id") @NotNull Long id,
             @ApiParam(value = "skill details for update", required = true)
-            @RequestBody SkillItemRequest user);
+            @RequestBody SkillRequest user);
 
     @ApiOperation(value = "Delete skill", nickname = "delete",
             notes = "Update skill by id", tags = {})
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<SkillItemResponse> deleteSkill(
+    ResponseEntity<SkillResponse> deleteSkill(
             @ApiParam(value = "skill unique identifier", required = true)
             @PathVariable(value = "id") @NotNull Long id);
 
