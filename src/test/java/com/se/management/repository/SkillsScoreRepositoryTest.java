@@ -17,7 +17,7 @@ import java.util.HashSet;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @EnableJpaAuditing
-public class SkillRepositoryTest {
+public class SkillsScoreRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;

@@ -18,21 +18,19 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "skills_score")
 @Builder(toBuilder = true)
-public class Skill {
+public class SkillsScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToOne(mappedBy = "skill_name", fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL)
 
     @NotNull
-   // @Convert(converter = SkillNameConverter.class)
-   // private SkillName skillName = SkillName.NOT_SET;
-
-    private  String name;
+    @ManyToOne
+    @JoinColumn(name = "skill_id", nullable = true)
+    private SkillItem skill;
 
     @Min(0)
     @Max(10)
@@ -43,21 +41,16 @@ public class Skill {
 //    private Searcher searcher;
     @ManyToMany
     @JoinTable(name="searcher_skills",
-            joinColumns=@JoinColumn(name="skill_id"),
+            joinColumns=@JoinColumn(name="skills_score_id"),
             inverseJoinColumns=@JoinColumn(name="searcher_id"))
 
-//    @ManyToMany(fetch = FetchType.LAZY,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            },
-//            mappedBy = "skills")
+
     private Set<Searcher> searchers = new HashSet<>();
 
-//    public void removeChild(Searcher s) {
-//        skills.remove(s);
-//        s.setTags(null);
-//    }
+    public void removeChildSearcher(Searcher s) {
+        searchers.remove(s);
+        s.setSkillsScores(null);
+    }
 
     public Set<Searcher> addSearcher(Searcher searcher) {
         searchers.add(searcher);

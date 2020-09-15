@@ -4,7 +4,7 @@ package com.se.management.service.impl;
 import com.se.management.domain.Address;
 import com.se.management.domain.ContactInfo;
 import com.se.management.domain.Searcher;
-import com.se.management.domain.Skill;
+import com.se.management.domain.SkillsScore;
 import com.se.management.exception.SearcherNotFoundException;
 import com.se.management.mapper.AddressMapper;
 import com.se.management.mapper.ContactMapper;
@@ -14,7 +14,6 @@ import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.request.SkillRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
-import com.se.management.model.response.SkillResponse;
 import com.se.management.repository.ContactInfoRepository;
 import com.se.management.repository.SearcherRepository;
 import com.se.management.repository.SkillRepository;
@@ -27,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,7 +50,7 @@ public class SearcherServiceImpl implements SearcherService {
 
         List<SkillRequest> skillsRequestList = searcherRequest.getSkillRequestList();
 
-        List<Skill> skillList = skillsRequestList.stream().
+        List<SkillsScore> skillsScoreList = skillsRequestList.stream().
                 map(SkillMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
 
         List<ContactInfo> contactInfoList = searcherRequest.getContactInfos().stream().
@@ -67,7 +65,7 @@ public class SearcherServiceImpl implements SearcherService {
         searcherRepository.save(searcher);
 
         // TODO: check is skill name exists
-        for(Skill item: skillList){
+        for(SkillsScore item: skillsScoreList){
             item.addSearcher(searcher);
             skillRepository.save(item);
         }
@@ -113,7 +111,7 @@ public class SearcherServiceImpl implements SearcherService {
         searcherRepository.save(searcher);
 
         // new skills
-        List<Skill> requestSkillList = searcherRequest.getSkillRequestList().stream().
+        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkillRequestList().stream().
                 map(SkillMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
 
         // TODO: many-to -many migration

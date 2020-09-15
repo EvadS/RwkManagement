@@ -57,19 +57,19 @@ public class Searcher extends Auditable<String> implements Serializable {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "searcher_skills",
+    @JoinTable(name = "searcher_skills_score",
             joinColumns = { @JoinColumn(name = "searcher_id") },
-            inverseJoinColumns = { @JoinColumn(name = "skill_id") })
-    private Set<Skill> skills = new HashSet<>();
+            inverseJoinColumns = { @JoinColumn(name = "skills_score_id") })
+    private Set<SkillsScore> skillsScores = new HashSet<>();
 
-    public Set<Skill> addSkill(Skill skill) {
-        skills.add(skill);
-        return this.skills;
+    public Set<SkillsScore> addSkill(SkillsScore skillsScore) {
+        skillsScores.add(skillsScore);
+        return this.skillsScores;
     }
 
-    public void removeSkill(Skill skill) {
-        skills.remove(skill);
-        skill.setSearchers(null);
+    public void removeSkill(SkillsScore skillsScore) {
+        skillsScores.remove(skillsScore);
+        skillsScore.setSearchers(null);
     }
 
     public Set<Address> addAddress(Address address) {

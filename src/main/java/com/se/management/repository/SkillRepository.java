@@ -1,13 +1,11 @@
 package com.se.management.repository;
 
-import com.se.management.domain.Skill;
+import com.se.management.domain.SkillsScore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface SkillRepository extends JpaRepository<Skill, Long> {
+public interface SkillRepository extends JpaRepository<SkillsScore, Long> {
 
    // List<Skill> findTop3BySearcherIdOrderByScoreDesc(long searcherId);
 
