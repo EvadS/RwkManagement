@@ -62,6 +62,20 @@ public class Searcher extends Auditable<String> implements Serializable {
             inverseJoinColumns = { @JoinColumn(name = "skills_score_id") })
     private Set<SkillsScore> skillsScores = new HashSet<>();
 
+
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "searcher_contact",
+            joinColumns = { @JoinColumn(name = "searcher_id") },
+            inverseJoinColumns = { @JoinColumn(name = "contact_id") })
+    private Set<Contact> contacts = new HashSet<>();
+
+
+
     public Set<SkillsScore> addSkill(SkillsScore skillsScore) {
         skillsScores.add(skillsScore);
         return this.skillsScores;

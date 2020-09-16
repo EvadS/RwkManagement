@@ -12,11 +12,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 public class ContactInfoRequest {
-
     @NotNull
-    @Convert(converter = MessengerTypeConverter.class)
-    private MessengerType messengerType;
+    // @SkillExists
+    private Long contactTypeId;
 
     @NotBlank
-    private String messengerAddress;
+    private String value;
 }

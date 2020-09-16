@@ -136,17 +136,19 @@ public class SearcherServiceImpl implements SearcherService {
 //            skillRepository.save(it);
 //        });
 
-        List<ContactInfo> requestContactInfoList = searcherRequest.getContactInfos().stream().
-                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
-                .collect(Collectors.toList());
 
-        List<ContactInfo> contactInfoList = contactInfoRepository.findBySearcherId(searcherId);
-        contactInfoRepository.deleteAll(contactInfoList);
-
-        requestContactInfoList.stream().forEach(it -> {
-            it.setSearcher(searcher);
-            contactInfoRepository.save(it);
-        });
+        // TODO: migrate to many -to -many
+//        List<Contact> requestContactList = searcherRequest.getContactInfos().stream().
+//                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
+//                .collect(Collectors.toList());
+//
+//        List<Contact> contactList = contactInfoRepository.findBySearcherId(searcherId);
+//        contactInfoRepository.deleteAll(contactList);
+//
+//        requestContactList.stream().forEach(it -> {
+//            it.setSearcher(searcher);
+//            contactInfoRepository.save(it);
+//        });
 
         return SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
     }
@@ -165,10 +167,10 @@ public class SearcherServiceImpl implements SearcherService {
 //        List<Skill> skillList = skillRepository.findBySearcherId(searcherId);
 //        skillRepository.deleteAll(skillList);
 
-        List<ContactInfo> contactInfoList = contactInfoRepository.findBySearcherId(searcherId);
-        contactInfoRepository.deleteAll(contactInfoList);
-
-        searcherRepository.delete(searcherOptional.get());
+//        List<Contact> contactList = contactInfoRepository.findBySearcherId(searcherId);
+//        contactInfoRepository.deleteAll(contactList);
+//
+//        searcherRepository.delete(searcherOptional.get());
 
         return true;
     }

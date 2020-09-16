@@ -6,38 +6,40 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 @Entity
+@Table(name = "contact")
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "skills_score")
 @Builder(toBuilder = true)
-public class SkillsScore {
+public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "skill_id", nullable = true)
-    private Skill skill;
 
-    @Min(0)
-    @Max(10)
-    private byte score;
+    @ManyToOne
+    @JoinColumn(name = "contact_type_id", nullable = true)
+    private ContactType contactType;
+
+    @NotNull
+    private String messengerAddress;
+
 
     @ManyToMany
-    @JoinTable(name="searcher_skills",
-            joinColumns=@JoinColumn(name="skills_score_id"),
+    @JoinTable(name="searcher_contacts",
+            joinColumns=@JoinColumn(name="contact_id"),
             inverseJoinColumns=@JoinColumn(name="searcher_id"))
     private Set<Searcher> searchers = new HashSet<>();
+
+
 
     public void removeChildSearcher(Searcher s) {
         searchers.remove(s);

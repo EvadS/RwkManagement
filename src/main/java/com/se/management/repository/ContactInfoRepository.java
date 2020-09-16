@@ -1,13 +1,13 @@
 package com.se.management.repository;
 
-import com.se.management.domain.ContactInfo;
+import com.se.management.domain.Contact;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ContactInfoRepository extends JpaRepository<ContactInfo, Long> {
+public interface ContactInfoRepository extends JpaRepository<Contact, Long> {
 
-    List<ContactInfo> findBySearcherId(long searcherId);
+   // List<Contact> findBySearcherId(long searcherId);
 }

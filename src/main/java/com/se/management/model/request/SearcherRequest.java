@@ -38,6 +38,7 @@ public class SearcherRequest {
     @NotNull(message="skills list attributes are required")
     private  List<@Valid SkillScoreRequest> skills = new ArrayList<>();
 
-
-    private List<ContactInfoRequest> contactInfos = new ArrayList<>();
+    @Valid
+    @NotNull(message="contacts list attributes are required")
+    private List<@Valid ContactInfoRequest> contactInfos = new ArrayList<>();
 }

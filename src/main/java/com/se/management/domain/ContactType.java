@@ -8,10 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "skill")
 @Data
-public class Skill {
-
+@Table(name = "contact_type")
+public class ContactType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,9 +19,7 @@ public class Skill {
     @Column(unique = true)
     private String name;
 
-
-    @OneToMany(mappedBy = "skill"
+    @OneToMany(mappedBy = "contactType"
             ,fetch = FetchType.LAZY)
-    private Set<SkillsScore> skillsScores = new HashSet<SkillsScore>();
+    private Set<Contact> contacts = new HashSet<>();
 }
-
