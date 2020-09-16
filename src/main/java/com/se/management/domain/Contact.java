@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,8 +25,8 @@ public class Contact {
 
 
     @ManyToOne
-    @JoinColumn(name = "contact_type_id", nullable = true)
-    private ContactType contactType;
+    @JoinColumn(name = "messenger_type_id", nullable = true)
+    private MessengerType messengerType;
 
     @NotNull
     private String messengerAddress;

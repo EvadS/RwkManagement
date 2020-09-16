@@ -1,7 +1,7 @@
 package com.se.management.model.request;
 
 
-import com.se.management.constrains.SkillExists;
+import com.se.management.constrains.MessengerTypeExists;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class SkillScoreRequest {
 
     @NotNull
-    @SkillExists
+    @MessengerTypeExists
     private Long skillId;
 
     @Min(0)

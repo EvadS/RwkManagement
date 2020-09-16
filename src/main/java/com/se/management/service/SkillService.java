@@ -1,6 +1,6 @@
 package com.se.management.service;
 
-import com.se.management.model.SkillSearch;
+import com.se.management.model.search.SkillSearch;
 import com.se.management.model.request.SkillRequest;
 import com.se.management.model.response.SkillResponse;
 import org.springframework.data.domain.Page;

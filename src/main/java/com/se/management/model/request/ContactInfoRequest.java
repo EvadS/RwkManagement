@@ -1,11 +1,9 @@
 package com.se.management.model.request;
 
-import com.se.management.model.converters.MessengerTypeConverter;
-import com.se.management.model.enums.MessengerType;
+import com.se.management.constrains.MessengerTypeExists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Convert;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ContactInfoRequest {
     @NotNull
-    // @SkillExists
+    @MessengerTypeExists
     private Long contactTypeId;
 
     @NotBlank

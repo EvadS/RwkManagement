@@ -1,4 +1,4 @@
-package com.se.management.model;
+package com.se.management.model.search;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

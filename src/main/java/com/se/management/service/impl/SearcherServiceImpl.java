@@ -8,7 +8,7 @@ import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.request.SkillScoreRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
-import com.se.management.repository.ContactInfoRepository;
+import com.se.management.repository.ContactRepository;
 import com.se.management.repository.SearcherRepository;
 import com.se.management.repository.SkillRepository;
 import com.se.management.repository.SkillsScoreRepository;
@@ -35,7 +35,7 @@ public class SearcherServiceImpl implements SearcherService {
     private SearcherRepository searcherRepository;
 
     @Autowired
-    private ContactInfoRepository contactInfoRepository;
+    private ContactRepository contactRepository;
 
     @Autowired
     private SkillsScoreRepository skillsScoreRepository;

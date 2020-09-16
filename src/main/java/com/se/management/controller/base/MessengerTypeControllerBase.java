@@ -1,8 +1,8 @@
 package com.se.management.controller.base;
 
-import com.se.management.model.search.SkillSearch;
-import com.se.management.model.request.SkillRequest;
-import com.se.management.model.response.SkillResponse;
+import com.se.management.model.request.MessengerTypeRequest;
+import com.se.management.model.response.MessengerTypeResponse;
+import com.se.management.model.search.MessengerTypeSearch;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-
-@Api(value = "Skill api management")
-public interface SkillsControllerBase {
+@Api(value = "Messengers api management.")
+public interface MessengerTypeControllerBase {
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
@@ -27,7 +26,7 @@ public interface SkillsControllerBase {
                             "Multiple sort criteria are supported.")
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved paged skills list"),
+            @ApiResponse(code = 200, message = "Successfully retrieved paged messengers list"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
@@ -35,36 +34,36 @@ public interface SkillsControllerBase {
     @ApiOperation(value = "Search and paging",
             notes = "Filterable + sortable + pageable list", tags = {})
     @GetMapping("/search")
-    ResponseEntity<Page<SkillResponse>> filter(@NotNull final SkillSearch request, Pageable pageable);
+    ResponseEntity<Page<MessengerTypeResponse>> filter(@NotNull final MessengerTypeSearch request, Pageable pageable);
 
 
-    @ApiOperation(value = "Skill details", notes = "Skill details by id", tags = {})
+    @ApiOperation(value = "Messenger details", notes = "Messenger details by id", tags = {})
     @GetMapping(value = "/{id}")
-    ResponseEntity<SkillResponse> getById(
-            @ApiParam(value = "User unique identifier", required = true)
+    ResponseEntity<MessengerTypeResponse> getByIdd(
+            @ApiParam(value = "Messenger unique identifier", required = true)
             @PathVariable(value = "id") Long id);
 
-    @ApiOperation(value = "Create skill", nickname = "create",
-            notes = "Create skill by id", tags = {})
+    @ApiOperation(value = "Create messenger", nickname = "create",
+            notes = "Create new messenger type", tags = {})
     @PostMapping
-    ResponseEntity<SkillResponse> create(@Valid @RequestBody
-                                                  @ApiParam(value = "skill details for update", required = true)
-                                                          SkillRequest skillRequest);
+    ResponseEntity<MessengerTypeResponse> create(@Valid @RequestBody
+                                                 @ApiParam(value = "Info for new messenger", required = true)
+                                                         MessengerTypeRequest request);
 
-    @ApiOperation(value = "Update skill", nickname = "update",
-            notes = "Update skill by id", tags = {})
+    @ApiOperation(value = "Update messenger", nickname = "update",
+            notes = "Update messenger by id", tags = {})
     @PutMapping(value = "/{id}")
-    ResponseEntity<SkillResponse> update(
-            @ApiParam(value = "skill unique identifier", required = true)
+    ResponseEntity<MessengerTypeResponse> update(
+            @ApiParam(value = "Messenger unique identifier", required = true)
             @PathVariable(value = "id") @NotNull Long id,
-            @ApiParam(value = "skill details for update", required = true)
-            @RequestBody SkillRequest request);
+            @ApiParam(value = "Messenger details for update", required = true)
+            @RequestBody MessengerTypeRequest request);
 
-    @ApiOperation(value = "Delete skill", nickname = "delete",
-            notes = "Update skill by id", tags = {})
+    @ApiOperation(value = "Delete messenger type.", nickname = "delete",
+            notes = "Delete messenger type.", tags = {})
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<SkillResponse> delete(
-            @ApiParam(value = "skill unique identifier", required = true)
+    ResponseEntity delete(
+            @ApiParam(value = "Messenger unique identifier", required = true)
             @PathVariable(value = "id") @NotNull Long id);
 
 

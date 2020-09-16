@@ -30,8 +30,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                // TODO: Skiea for debug  -->
                 .antMatchers("/searcher","/searcher*","/searcher/**").permitAll()
                 .antMatchers("/skills","/skills*","/skills/*").permitAll()
+                .antMatchers("/messenger","/messenger*","/messenger/*").permitAll()
+                // <---
                 .antMatchers("/register", "/auth").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",

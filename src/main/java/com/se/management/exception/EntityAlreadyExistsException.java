@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class IncorrectSkillException extends RuntimeException{
-    public IncorrectSkillException(String errorMessage) {
+public class EntityAlreadyExistsException extends RuntimeException{
+    public EntityAlreadyExistsException(String errorMessage) {
         super(errorMessage);
     }
 }

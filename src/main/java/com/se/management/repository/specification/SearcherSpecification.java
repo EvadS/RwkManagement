@@ -1,7 +1,7 @@
 package com.se.management.repository.specification;
 
 import com.se.management.domain.Searcher;
-import com.se.management.model.SearcherSearch;
+import com.se.management.model.search.SearcherSearch;
 import com.se.management.repository.SkillsScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;

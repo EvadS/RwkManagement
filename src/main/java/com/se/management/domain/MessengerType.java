@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "contact_type")
-public class ContactType {
+@Table(name = "messenger_type")
+public class MessengerType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +19,7 @@ public class ContactType {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "contactType"
+    @OneToMany(mappedBy = "messengerType"
             ,fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<>();
 }

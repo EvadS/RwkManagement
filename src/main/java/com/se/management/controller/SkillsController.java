@@ -2,7 +2,7 @@ package com.se.management.controller;
 
 
 import com.se.management.controller.base.SkillsControllerBase;
-import com.se.management.model.SkillSearch;
+import com.se.management.model.search.SkillSearch;
 import com.se.management.model.request.SkillRequest;
 import com.se.management.model.response.SkillResponse;
 import com.se.management.service.SkillService;
@@ -28,31 +28,31 @@ public class SkillsController implements SkillsControllerBase {
 
     @Override
     public ResponseEntity<Page<SkillResponse>> filter(@NotNull SkillSearch request, Pageable pageable) {
-        Page<SkillResponse> bannerResponseList = skillService.filter(request, pageable);
-        return ResponseEntity.ok(bannerResponseList);
+        Page<SkillResponse> responsePage = skillService.filter(request, pageable);
+        return ResponseEntity.ok(responsePage);
     }
 
     @Override
-    public ResponseEntity<SkillResponse> getSkillById(Long skillId) {
+    public ResponseEntity<SkillResponse> getById(Long skillId) {
         SkillResponse skillResponse = skillService.getById(skillId);
         return ResponseEntity.ok(skillResponse);
     }
 
     @Override
-    public ResponseEntity<SkillResponse> updateSkill(@NotNull Long skillId, SkillRequest skillRequest) {
+    public ResponseEntity<SkillResponse> update(@NotNull Long skillId, SkillRequest skillRequest) {
         SkillResponse skillResponse = skillService.update(skillId, skillRequest);
         return new ResponseEntity<>(skillResponse, HttpStatus.ACCEPTED);
     }
 
     @Override
-    public ResponseEntity<SkillResponse> createSkill(@Valid @RequestBody SkillRequest skillRequest) {
+    public ResponseEntity<SkillResponse> create(@Valid @RequestBody SkillRequest skillRequest) {
 
         SkillResponse skillResponse = skillService.create(skillRequest);
         return new ResponseEntity<>(skillResponse, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<SkillResponse> deleteSkill(@NotNull Long skillId) {
+    public ResponseEntity<SkillResponse> delete(@NotNull Long skillId) {
         boolean bannerResponse = skillService.delete(skillId);
         return new ResponseEntity(bannerResponse, HttpStatus.ACCEPTED);
     }

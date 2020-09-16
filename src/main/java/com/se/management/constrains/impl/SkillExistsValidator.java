@@ -1,6 +1,6 @@
 package com.se.management.constrains.impl;
 
-import com.se.management.constrains.SkillExists;
+import com.se.management.constrains.MessengerTypeExists;
 import com.se.management.repository.SkillRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,9 @@ import javax.validation.ConstraintValidatorContext;
  * of content type validating. It's based just on <code>String</code> equalsIgnoreCase
  * method.
  */
-public class SkillExistsValidator implements ConstraintValidator<SkillExists, Long> {
+public class SkillExistsValidator implements ConstraintValidator<MessengerTypeExists, Long> {
 
-    private final Logger logger = LoggerFactory.getLogger(SkillExists.class);
+    private final Logger logger = LoggerFactory.getLogger(MessengerTypeExists.class);
 
     private final SkillRepository skillRepository;
 
@@ -28,7 +28,7 @@ public class SkillExistsValidator implements ConstraintValidator<SkillExists, Lo
     public boolean isValid(Long value, ConstraintValidatorContext context) {
         boolean skillExists =  skillRepository.existsById(value);
 
-        logger.info("Skill exists validator. Skill with id : {} exists : {} ", value, skillExists);
+        logger.debug("Skill exists validator. Skill with id : {} exists : {} ", value, skillExists);
 
         return skillExists;
     }

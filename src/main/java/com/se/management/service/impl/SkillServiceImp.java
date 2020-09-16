@@ -1,11 +1,11 @@
 package com.se.management.service.impl;
 
 import com.se.management.domain.Skill;
-import com.se.management.exception.IncorrectSkillException;
+import com.se.management.exception.EntityAlreadyExistsException;
 import com.se.management.exception.SkillNotFoundException;
 
 import com.se.management.mapper.SkillMapper;
-import com.se.management.model.SkillSearch;
+import com.se.management.model.search.SkillSearch;
 import com.se.management.model.request.SkillRequest;
 import com.se.management.model.response.SkillResponse;
 import com.se.management.repository.SkillRepository;
@@ -49,7 +49,7 @@ public class SkillServiceImp implements SkillService {
         // TODO: refactoring, maybe use constraint
         Optional<Skill> skillItemOptional = skillRepository.findTop1ByName(skillRequest.getName());
         if (skillItemOptional.isPresent()) {
-            throw new IncorrectSkillException(
+            throw new EntityAlreadyExistsException(
                     String.format("Can't save new skill with name : %s. The skill is already exists.", skillRequest.getName()));
         }
 
