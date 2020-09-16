@@ -3,15 +3,15 @@ package com.se.management.service.impl;
 
 import com.se.management.domain.*;
 import com.se.management.exception.SearcherNotFoundException;
-import com.se.management.mapper.*;
+import com.se.management.mapper.AddressMapper;
+import com.se.management.mapper.SearcherMapper;
+import com.se.management.mapper.SkillScoreMapper;
+import com.se.management.model.request.ContactInfoRequest;
 import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.request.SkillScoreRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
-import com.se.management.repository.ContactRepository;
-import com.se.management.repository.SearcherRepository;
-import com.se.management.repository.SkillRepository;
-import com.se.management.repository.SkillsScoreRepository;
+import com.se.management.repository.*;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +30,16 @@ import java.util.stream.Collectors;
 public class SearcherServiceImpl implements SearcherService {
 
     private static final Logger logger = LoggerFactory.getLogger(SearcherServiceImpl.class);
-
-    @Autowired
-    private SearcherRepository searcherRepository;
-
-    @Autowired
-    private ContactRepository contactRepository;
-
-    @Autowired
-    private SkillsScoreRepository skillsScoreRepository;
-
     @Autowired
     SkillRepository skillRepo;
+    @Autowired
+    private SearcherRepository searcherRepository;
+    @Autowired
+    private ContactRepository contactRepository;
+    @Autowired
+    private MessengerTypeRepository messengerTypeRepository;
+    @Autowired
+    private SkillsScoreRepository skillsScoreRepository;
 
     @Transactional
     @Override
@@ -49,8 +47,7 @@ public class SearcherServiceImpl implements SearcherService {
 
         List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
 
-        List<SkillsScore> skillsScoreList = skillsRequestList.stream().
-                map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
+        List<ContactInfoRequest> contactInfoList = searcherRequest.getContactInfos();
 
         Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
 
@@ -59,42 +56,30 @@ public class SearcherServiceImpl implements SearcherService {
 
         searcherRepository.save(searcher);
 
-        for(SkillScoreRequest item : skillsRequestList){
-            SkillsScore skillsScore = new SkillsScore();
-            skillsScore.setScore(item.getScore());
+        skillsRequestList.stream().forEach(it -> {
 
-            Skill skill = skillRepo.getOne(item.getSkillId());
+            Skill skill = skillRepo.getOne(it.getSkillId());
+            SkillsScore skillsScore = SkillsScore.builder()
+                    .score(it.getScore())
+                    .skill(skill)
+                    .build();
 
-            skillsScore.setSkill(skill);
             skillsScore.addSearcher(searcher);
-
             skillsScoreRepository.save(skillsScore);
+        });
 
+
+        // TODO: refactored to stream api
+        for (ContactInfoRequest item : contactInfoList) {
+
+            Contact contact = new Contact();
+            contact.setMessengerAddress(item.getAddress());
+
+            MessengerType messengerType = messengerTypeRepository.getOne(item.getMessengerTypeId());
+            contact.setMessengerType(messengerType);
+            contact.addSearcher(searcher);
+            contactRepository.save(contact);
         }
-        // TODO: check is skill name exists
-//        for(SkillsScore item: skillsScoreList){
-//            item.addSearcher(searcher);
-//            skillsScoreRepository.save(item);
-//        }
-
-        searcherRepository.save(searcher);
-
-//        List<ContactInfo> contactInfoList = searcherRequest.getContactInfos().stream().
-//                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
-//                .collect(Collectors.toList());
-//
-//        contactInfoList.stream().forEach(it -> {
-//            it.setSearcher(searcher);
-//            contactInfoRepository.save(it);
-//        });
-
-
-
-        // TODO:
-//        skillList.stream().forEach(it -> {
-//            it.setSearcher(searcher);
-//            skillRepository.save(it);
-//        });
 
         SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
         return searcherResponse;
@@ -192,7 +177,7 @@ public class SearcherServiceImpl implements SearcherService {
         searcherListItem.setId(searcher.getId());
         searcherListItem.setFName(searcher.getFirstName());
         searcherListItem.setLName(searcher.getLastName());
-   //     searcherListItem.setTolSkillList(skillResponseList);
+        //     searcherListItem.setTolSkillList(skillResponseList);
 
         return searcherListItem;
     }

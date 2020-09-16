@@ -9,7 +9,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-
 public class MessengerTypeExistsValidator implements ConstraintValidator<MessengerTypeExists, Long> {
 
     private final Logger logger = LoggerFactory.getLogger(MessengerTypeExists.class);
@@ -23,10 +22,10 @@ public class MessengerTypeExistsValidator implements ConstraintValidator<Messeng
 
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
-        boolean skillExists =  messengerTypeRepository.existsById(value);
+        boolean isExists =  messengerTypeRepository.existsById(value);
 
-        logger.debug("Messenger type exists validator. Messenger with id : {} exists : {} ", value, skillExists);
+        logger.debug("Messenger type exists validator. Messenger with id : {} exists : {} ", value, isExists);
 
-        return skillExists;
+        return isExists;
     }
 }

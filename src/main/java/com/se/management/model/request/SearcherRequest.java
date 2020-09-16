@@ -33,7 +33,6 @@ public class SearcherRequest {
     @Size(max = 100)
     private String email;
 
-   // @Valid not recommended
     @Valid
     @NotNull(message="skills list attributes are required")
     private  List<@Valid SkillScoreRequest> skills = new ArrayList<>();

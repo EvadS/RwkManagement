@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 public class ContactInfoRequest {
     @NotNull
     @MessengerTypeExists
-    private Long contactTypeId;
+    private Long messengerTypeId;
 
     @NotBlank
-    private String value;
+    private String address;
 }
