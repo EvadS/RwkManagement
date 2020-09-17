@@ -25,28 +25,25 @@ public class SkillsScore {
     private Long id;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "skill_id", nullable = true)
-    private Skill skill;
+//    @ManyToOne
+//    @JoinColumn(name = "skill_id", nullable = true)
+    private String skill;
 
     @Min(0)
     @Max(10)
     private byte score;
 
-    @ManyToMany
-    @JoinTable(name="searcher_skills",
-            joinColumns=@JoinColumn(name="skills_score_id"),
-            inverseJoinColumns=@JoinColumn(name="searcher_id"))
-    @Builder.Default
-    private Set<Searcher> searchers = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "searcher_id", nullable = true)
+    private Searcher searcher;
 
-    public void removeChildSearcher(Searcher s) {
-        searchers.remove(s);
-        s.setSkillsScores(null);
-    }
 
-    public Set<Searcher> addSearcher(Searcher searcher) {
-        searchers.add(searcher);
-        return this.searchers;
-    }
+
+//    @ManyToMany
+//    @JoinTable(name="searcher_skills",
+//            joinColumns=@JoinColumn(name="skills_score_id"),
+//            inverseJoinColumns=@JoinColumn(name="searcher_id"))
+//    @Builder.Default
+//    private Set<Searcher> searchers = new HashSet<>();
+
 }

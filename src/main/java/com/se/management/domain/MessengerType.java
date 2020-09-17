@@ -18,8 +18,8 @@ public class MessengerType {
     @NotBlank
     @Column(unique = true)
     private String name;
-
-    @OneToMany(mappedBy = "messengerType"
-            ,fetch = FetchType.LAZY)
-    private Set<Contact> contacts = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "messengerType"
+//            ,fetch = FetchType.LAZY)
+//    private Set<Contact> contacts = new HashSet<>();
 }

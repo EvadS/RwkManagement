@@ -45,44 +45,45 @@ public class SearcherServiceImpl implements SearcherService {
     @Override
     public SearcherResponse create(@Valid SearcherRequest searcherRequest) {
 
-        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
-
-        List<ContactInfoRequest> contactInfoList = searcherRequest.getContactInfos();
-
-        Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
-
-        Searcher searcher = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
-        searcher.addAddress(address);
-
-        searcherRepository.save(searcher);
-
-        skillsRequestList.stream().forEach(it -> {
-
-            Skill skill = skillRepo.getOne(it.getSkillId());
-            SkillsScore skillsScore = SkillsScore.builder()
-                    .score(it.getScore())
-                    .skill(skill)
-                    .build();
-
-            skillsScore.addSearcher(searcher);
-            skillsScoreRepository.save(skillsScore);
-        });
-
-
-        // TODO: refactored to stream api
-        for (ContactInfoRequest item : contactInfoList) {
-
-            Contact contact = new Contact();
-            contact.setMessengerAddress(item.getAddress());
-
-            MessengerType messengerType = messengerTypeRepository.getOne(item.getMessengerTypeId());
-            contact.setMessengerType(messengerType);
-            contact.addSearcher(searcher);
-            contactRepository.save(contact);
-        }
-
-        SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
-        return searcherResponse;
+        return null;
+//        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
+//
+//        List<ContactInfoRequest> contactInfoList = searcherRequest.getContactInfos();
+//
+//        Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
+//
+//        Searcher searcher = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
+//        searcher.addAddress(address);
+//
+//        searcherRepository.save(searcher);
+//
+//        skillsRequestList.stream().forEach(it -> {
+//
+//            Skill skill = skillRepo.getOne(it.getSkillId());
+//            SkillsScore skillsScore = SkillsScore.builder()
+//                    .score(it.getScore())
+//                    .skill(skill)
+//                    .build();
+//
+//            skillsScore.addSearcher(searcher);
+//            skillsScoreRepository.save(skillsScore);
+//        });
+//
+//
+//        // TODO: refactored to stream api
+//        for (ContactInfoRequest item : contactInfoList) {
+//
+//            Contact contact = new Contact();
+//            contact.setMessengerAddress(item.getAddress());
+//
+//            MessengerType messengerType = messengerTypeRepository.getOne(item.getMessengerTypeId());
+//            contact.setMessengerType(messengerType);
+//            contact.addSearcher(searcher);
+//            contactRepository.save(contact);
+//        }
+//
+//        SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
+//        return searcherResponse;
     }
 
     @Override

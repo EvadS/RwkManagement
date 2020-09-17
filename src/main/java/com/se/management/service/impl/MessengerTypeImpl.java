@@ -61,25 +61,27 @@ public class MessengerTypeImpl implements MessengerTypeService {
         logger.debug("Added new messenger type : {} ", messengerType);
 
         return MessengerTypeMapper.INSTANCE.MessengerTypeToMessengerTypeResponse(messengerType);
+
     }
 
     @Override
     public MessengerTypeResponse update(Long id, MessengerTypeRequest request) {
-        Optional<MessengerType> messengerTypeOpt = messengerRepo.findById(id);
-
-        if (!messengerTypeOpt.isPresent()) {
-            logger.error("Can't find messenger type by id : {}", id);
-            throw new SkillNotFoundException(String.format("Can't find messenger type by id %s", id));
-        }
-
-        MessengerType messengerType = messengerTypeOpt.get();
-
-        messengerType.setName(request.getName());
-        messengerRepo.save(messengerType);
-
-        logger.debug("Messenger id : {} was updated to: {} ",id, messengerType);
-
-        return MessengerTypeMapper.INSTANCE.MessengerTypeToMessengerTypeResponse(messengerType);
+//        Optional<MessengerType> messengerTypeOpt = messengerRepo.findById(id);
+//
+//        if (!messengerTypeOpt.isPresent()) {
+//            logger.error("Can't find messenger type by id : {}", id);
+//            throw new SkillNotFoundException(String.format("Can't find messenger type by id %s", id));
+//        }
+//
+//        MessengerType messengerType = messengerTypeOpt.get();
+//
+//        messengerType.setName(request.getName());
+//        messengerRepo.save(messengerType);
+//
+//        logger.debug("Messenger id : {} was updated to: {} ",id, messengerType);
+//
+//        return MessengerTypeMapper.INSTANCE.MessengerTypeToMessengerTypeResponse(messengerType);
+return null;
     }
 
     @Override

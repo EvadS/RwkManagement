@@ -23,30 +23,30 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "messenger_type_id", nullable = true)
-    private MessengerType messengerType;
-
-    @NotNull
-    private String messengerAddress;
-
-
-    @ManyToMany
-    @JoinTable(name="searcher_contacts",
-            joinColumns=@JoinColumn(name="contact_id"),
-            inverseJoinColumns=@JoinColumn(name="searcher_id"))
-    private Set<Searcher> searchers = new HashSet<>();
-
-
-
-    public void removeChildSearcher(Searcher s) {
-        searchers.remove(s);
-        s.setSkillsScores(null);
-    }
-
-    public Set<Searcher> addSearcher(Searcher searcher) {
-        searchers.add(searcher);
-        return this.searchers;
-    }
+//
+//    @ManyToOne
+//    @JoinColumn(name = "messenger_type_id", nullable = true)
+//    private MessengerType messengerType;
+//
+//    @NotNull
+//    private String messengerAddress;
+//
+//
+//    @ManyToMany
+//    @JoinTable(name="searcher_contacts",
+//            joinColumns=@JoinColumn(name="contact_id"),
+//            inverseJoinColumns=@JoinColumn(name="searcher_id"))
+//    private Set<Searcher> searchers = new HashSet<>();
+//
+//
+//
+//    public void removeChildSearcher(Searcher s) {
+//        searchers.remove(s);
+//        s.setSkillsScores(null);
+//    }
+//
+//    public Set<Searcher> addSearcher(Searcher searcher) {
+//        searchers.add(searcher);
+//        return this.searchers;
+//    }
 }

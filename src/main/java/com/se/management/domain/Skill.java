@@ -21,8 +21,9 @@ public class Skill {
     private String name;
 
 
-    @OneToMany(mappedBy = "skill"
-            ,fetch = FetchType.LAZY)
-    private Set<SkillsScore> skillsScores = new HashSet<SkillsScore>();
+//    @OneToMany(mappedBy = "skill"
+//            ,fetch = FetchType.LAZY)
+//    private Set<SkillsScore> skillsScores = new HashSet<SkillsScore>();
+
 }
 
