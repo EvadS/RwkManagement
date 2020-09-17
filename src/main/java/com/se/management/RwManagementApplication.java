@@ -108,7 +108,6 @@ public class RwManagementApplication  implements CommandLineRunner {
         skillsScoreRepository.save(skillScore3);
         skillsScoreRepository.save(skillScore4);
 
-        int a =9;
 
     }
 }
