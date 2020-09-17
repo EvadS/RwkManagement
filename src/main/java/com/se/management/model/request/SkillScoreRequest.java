@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class SkillScoreRequest {
 
     @NotNull
-    @MessengerTypeExists
+    // TODO: add own validator
     private Long skillId;
 
     @Min(0)

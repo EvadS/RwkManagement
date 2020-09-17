@@ -11,11 +11,11 @@ import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.request.SkillScoreRequest;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
+import com.se.management.model.response.SkillResponse;
 import com.se.management.repository.*;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,60 +30,63 @@ import java.util.stream.Collectors;
 public class SearcherServiceImpl implements SearcherService {
 
     private static final Logger logger = LoggerFactory.getLogger(SearcherServiceImpl.class);
-    @Autowired
-    SkillRepository skillRepo;
-    @Autowired
-    private SearcherRepository searcherRepository;
-    @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private MessengerTypeRepository messengerTypeRepository;
-    @Autowired
-    private SkillsScoreRepository skillsScoreRepository;
+
+    private final SkillRepository skillRepo;
+    private final SearcherRepository searcherRepository;
+
+    private final ContactRepository contactRepository;
+    private final MessengerTypeRepository messengerTypeRepository;
+    private final SkillsScoreRepository skillsScoreRepository;
+
+    public SearcherServiceImpl(SkillRepository skillRepo, SearcherRepository searcherRepository,
+                               ContactRepository contactRepository, MessengerTypeRepository messengerTypeRepository,
+                               SkillsScoreRepository skillsScoreRepository) {
+        this.skillRepo = skillRepo;
+        this.searcherRepository = searcherRepository;
+        this.contactRepository = contactRepository;
+        this.messengerTypeRepository = messengerTypeRepository;
+        this.skillsScoreRepository = skillsScoreRepository;
+    }
 
     @Transactional
     @Override
     public SearcherResponse create(@Valid SearcherRequest searcherRequest) {
 
-        return null;
-//        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
+        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
 //
-//        List<ContactInfoRequest> contactInfoList = searcherRequest.getContactInfos();
+
+        Searcher searcher = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
+
+                Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
+                searcher.getAddresses().add(address);
 //
-//        Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
+        searcherRepository.save(searcher);
 //
-//        Searcher searcher = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
-//        searcher.addAddress(address);
-//
-//        searcherRepository.save(searcher);
-//
-//        skillsRequestList.stream().forEach(it -> {
-//
-//            Skill skill = skillRepo.getOne(it.getSkillId());
-//            SkillsScore skillsScore = SkillsScore.builder()
-//                    .score(it.getScore())
-//                    .skill(skill)
-//                    .build();
-//
-//            skillsScore.addSearcher(searcher);
-//            skillsScoreRepository.save(skillsScore);
-//        });
-//
-//
-//        // TODO: refactored to stream api
-//        for (ContactInfoRequest item : contactInfoList) {
-//
-//            Contact contact = new Contact();
-//            contact.setMessengerAddress(item.getAddress());
-//
-//            MessengerType messengerType = messengerTypeRepository.getOne(item.getMessengerTypeId());
-//            contact.setMessengerType(messengerType);
-//            contact.addSearcher(searcher);
-//            contactRepository.save(contact);
-//        }
-//
-//        SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
-//        return searcherResponse;
+        skillsRequestList.stream().forEach(it -> {
+            Skill skill = skillRepo.getOne(it.getSkillId());
+            SkillsScore skillsScore = SkillsScore.builder()
+                    .score(it.getScore())
+                    .searcher(searcher)
+                    .skill(skill)
+                    .build();
+            skillsScoreRepository.save(skillsScore);
+        });
+
+        List<ContactInfoRequest> contactRequestList = searcherRequest.getContactInfos();
+
+        contactRequestList.stream().forEach(it -> {
+            MessengerType messengerType = messengerTypeRepository.getOne(it.getMessengerTypeId());
+            Contact contact = Contact.builder()
+                    .messengerType(messengerType)
+                    .searcher(searcher)
+                    .value(it.getAddress())
+
+                    .build();
+            contactRepository.save(contact);
+        });
+
+        SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
+        return searcherResponse;
     }
 
     @Override
@@ -94,47 +97,51 @@ public class SearcherServiceImpl implements SearcherService {
             logger.error("Can't find searcher by id : {}", searcherId);
             throw new SearcherNotFoundException(String.format("Can't find searcher by id : {}", searcherId));
         }
-
+//
         Searcher searcher = searcherOptional.get();
-
-        //TODO: update address
-
+//
+//        //TODO: update address
+//
         Searcher searcherModel = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
 
         searcher.setFirstName(searcherModel.getFirstName());
         searcher.setLastName(searcherModel.getLastName());
         searcher.setReviewDate(searcherModel.getReviewDate());
-        searcher.setEmail(searcherModel.getEmail());
+        //searcher.setEmail(searcherModel.getEmail());
+
         searcherRepository.save(searcher);
 
-        // new skills
-        List<SkillsScore> requestSkillsScoreList = searcherRequest.getSkills().stream().
-                map(SkillScoreMapper.INSTANCE::SkillRequestToSkill).collect(Collectors.toList());
+        // clean current
+        List<SkillsScore> currentSkills = skillsScoreRepository.findBySearcherId(searcher.getId());
+        currentSkills.stream().forEach((it -> skillsScoreRepository.delete(it)));
 
-        // TODO: many-to -many migration
-        // remove currents
-//        List<Skill> skillList = skillRepository.findBySearcherId(searcherId);
-//        skillRepository.deleteAll(skillList);
+        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
 
-        // TODO:
-//        requestSkillList.stream().forEach(it -> {
-//            it.setSearcher(searcher);
-//            skillRepository.save(it);
-//        });
+        skillsRequestList.stream().forEach(it -> {
+            Skill skill = skillRepo.getOne(it.getSkillId());
+            SkillsScore skillsScore = SkillsScore.builder()
+                    .score(it.getScore())
+                    .searcher(searcher)
+                    .skill(skill)
+                    .build();
+            skillsScoreRepository.save(skillsScore);
+        });
 
+        List<ContactInfoRequest> contactRequestList = searcherRequest.getContactInfos();
 
-        // TODO: migrate to many -to -many
-//        List<Contact> requestContactList = searcherRequest.getContactInfos().stream().
-//                map(ContactMapper.INSTANCE::ContactInfoRequestToContactInfo)
-//                .collect(Collectors.toList());
-//
-//        List<Contact> contactList = contactInfoRepository.findBySearcherId(searcherId);
-//        contactInfoRepository.deleteAll(contactList);
-//
-//        requestContactList.stream().forEach(it -> {
-//            it.setSearcher(searcher);
-//            contactInfoRepository.save(it);
-//        });
+        List<Contact> currentContacts = contactRepository.findBySearcherId(searcherId);
+        currentContacts.stream().forEach((it -> contactRepository.delete(it)));
+
+        contactRequestList.stream().forEach(it -> {
+            MessengerType messengerType = messengerTypeRepository.getOne(it.getMessengerTypeId());
+            Contact contact = Contact.builder()
+                    .messengerType(messengerType)
+                    .searcher(searcher)
+                    .value(it.getAddress())
+
+                    .build();
+            contactRepository.save(contact);
+        });
 
         return SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
     }
@@ -149,15 +156,15 @@ public class SearcherServiceImpl implements SearcherService {
             throw new SearcherNotFoundException(String.format("Can't find searcher by id : %s ", searcherId));
         }
 
-        // TODO: many-to -many migration
-//        List<Skill> skillList = skillRepository.findBySearcherId(searcherId);
-//        skillRepository.deleteAll(skillList);
+        // clean current
+        List<SkillsScore> currentSkills = skillsScoreRepository.findBySearcherId(searcherId);
+        currentSkills.stream().forEach((it -> skillsScoreRepository.delete(it)));
 
-//        List<Contact> contactList = contactInfoRepository.findBySearcherId(searcherId);
-//        contactInfoRepository.deleteAll(contactList);
-//
-//        searcherRepository.delete(searcherOptional.get());
 
+        List<Contact> currentContacts = contactRepository.findBySearcherId(searcherId);
+        currentContacts.stream().forEach((it -> contactRepository.delete(it)));
+
+        searcherRepository.delete(searcherOptional.get());
         return true;
     }
 
@@ -167,18 +174,20 @@ public class SearcherServiceImpl implements SearcherService {
                 .map(this::searcherToSearcherResult);
     }
 
+    // TODO: SE move this code to map struct
     private SearcherListItem searcherToSearcherResult(Searcher searcher) {
-        SearcherListItem searcherListItem = new SearcherListItem();
 
-        // TODO:  migration to many - to - many
-//        List<SkillResponse> skillResponseList = skillRepository
-//                .findTop3BySearcherIdOrderByScoreDesc(searcher.getId()).stream()
-//                .map(SkillMapper.INSTANCE::SkillToSkillResponse).collect(Collectors.toList());
+        SearcherListItem searcherListItem = new SearcherListItem();
+//
+        // TOP 3 skill
+        List<SkillResponse> skillResponseList = skillsScoreRepository
+                .findTop3BySearcherIdOrderByScoreDesc(searcher.getId()).stream()
+                .map(SkillScoreMapper.INSTANCE::SkillScoreToSkillResponse).collect(Collectors.toList());
 
         searcherListItem.setId(searcher.getId());
         searcherListItem.setFName(searcher.getFirstName());
         searcherListItem.setLName(searcher.getLastName());
-        //     searcherListItem.setTolSkillList(skillResponseList);
+        searcherListItem.setTolSkillList(skillResponseList);
 
         return searcherListItem;
     }

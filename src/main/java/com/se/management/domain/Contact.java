@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
-
 
 @Data
 @Entity
@@ -23,30 +23,17 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//
-//    @ManyToOne
-//    @JoinColumn(name = "messenger_type_id", nullable = true)
-//    private MessengerType messengerType;
-//
-//    @NotNull
-//    private String messengerAddress;
-//
-//
-//    @ManyToMany
-//    @JoinTable(name="searcher_contacts",
-//            joinColumns=@JoinColumn(name="contact_id"),
-//            inverseJoinColumns=@JoinColumn(name="searcher_id"))
-//    private Set<Searcher> searchers = new HashSet<>();
-//
-//
-//
-//    public void removeChildSearcher(Searcher s) {
-//        searchers.remove(s);
-//        s.setSkillsScores(null);
-//    }
-//
-//    public Set<Searcher> addSearcher(Searcher searcher) {
-//        searchers.add(searcher);
-//        return this.searchers;
-//    }
+    @NotBlank
+    private String value;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "searcher_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Searcher searcher;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "messengerType_id", nullable = false)
+    private MessengerType messengerType;
+
 }

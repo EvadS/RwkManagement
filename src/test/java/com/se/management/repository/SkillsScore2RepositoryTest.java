@@ -1,8 +1,6 @@
 package com.se.management.repository;
 
 
-import com.se.management.domain.Address;
-import com.se.management.domain.Searcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +10,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
-
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @EnableJpaAuditing
-public class SkillsScoreRepositoryTest {
+public class SkillsScore2RepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;

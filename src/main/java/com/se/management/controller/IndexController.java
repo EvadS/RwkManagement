@@ -6,7 +6,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 
 @ApiIgnore
-
 @Controller
 public class IndexController {
 

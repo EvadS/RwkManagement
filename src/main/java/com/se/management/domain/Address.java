@@ -35,7 +35,4 @@ public class Address {
     @NotNull
     @Size(max = 100)
     private String zipCode;
-
-
-    // Getters and Setters (Omitted for brevity)
 }

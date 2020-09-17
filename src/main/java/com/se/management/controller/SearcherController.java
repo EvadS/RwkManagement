@@ -7,7 +7,6 @@ import com.se.management.model.response.SearcherResponse;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +25,11 @@ import javax.validation.Valid;
 public class SearcherController {
 
     private final Logger logger = LoggerFactory.getLogger(SearcherController.class);
+    private final SearcherService searcherService;
 
-    @Autowired
-    private SearcherService searcherService;
+    public SearcherController(SearcherService searcherService) {
+        this.searcherService = searcherService;
+    }
 
     @PostMapping()
     public ResponseEntity<SearcherResponse> createSearcher(@Valid @RequestBody  SearcherRequest searcherRequest) {

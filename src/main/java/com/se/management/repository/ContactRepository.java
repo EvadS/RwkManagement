@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-
-   // List<Contact> findBySearcherId(long searcherId);
+    List<Contact> findBySearcherId(long searcherId);
 }

@@ -1,15 +1,19 @@
 package com.se.management.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "skill")
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Skill {
 
     @Id
@@ -19,11 +23,6 @@ public class Skill {
     @NotBlank
     @Column(unique = true)
     private String name;
-
-
-//    @OneToMany(mappedBy = "skill"
-//            ,fetch = FetchType.LAZY)
-//    private Set<SkillsScore> skillsScores = new HashSet<SkillsScore>();
 
 }
 
