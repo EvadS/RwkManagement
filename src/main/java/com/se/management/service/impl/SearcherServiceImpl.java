@@ -1,6 +1,5 @@
 package com.se.management.service.impl;
 
-
 import com.se.management.domain.*;
 import com.se.management.exception.SearcherNotFoundException;
 import com.se.management.mapper.AddressMapper;
@@ -52,39 +51,15 @@ public class SearcherServiceImpl implements SearcherService {
     @Transactional
     @Override
     public SearcherResponse create(@Valid SearcherRequest searcherRequest) {
-
-        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
-//
-
         Searcher searcher = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
 
-                Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
-                searcher.getAddresses().add(address);
-//
+        Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
+        searcher.getAddresses().add(address);
+
         searcherRepository.save(searcher);
-//
-        skillsRequestList.stream().forEach(it -> {
-            Skill skill = skillRepo.getOne(it.getSkillId());
-            SkillsScore skillsScore = SkillsScore.builder()
-                    .score(it.getScore())
-                    .searcher(searcher)
-                    .skill(skill)
-                    .build();
-            skillsScoreRepository.save(skillsScore);
-        });
 
-        List<ContactInfoRequest> contactRequestList = searcherRequest.getContactInfos();
-
-        contactRequestList.stream().forEach(it -> {
-            MessengerType messengerType = messengerTypeRepository.getOne(it.getMessengerTypeId());
-            Contact contact = Contact.builder()
-                    .messengerType(messengerType)
-                    .searcher(searcher)
-                    .value(it.getAddress())
-
-                    .build();
-            contactRepository.save(contact);
-        });
+        updateSearchersSkills(searcherRequest, searcher);
+        updateSearcherContractInfo(searcherRequest, searcher);
 
         SearcherResponse searcherResponse = SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
         return searcherResponse;
@@ -98,11 +73,7 @@ public class SearcherServiceImpl implements SearcherService {
             logger.error("Can't find searcher by id : {}", searcherId);
             throw new SearcherNotFoundException(String.format("Can't find searcher by id : {}", searcherId));
         }
-//
         Searcher searcher = searcherOptional.get();
-//
-//        //TODO: update address
-//
         Searcher searcherModel = SearcherMapper.INSTANCE.SearcherRequestToSearcher(searcherRequest);
 
         searcher.setFirstName(searcherModel.getFirstName());
@@ -116,26 +87,22 @@ public class SearcherServiceImpl implements SearcherService {
         searcherRepository.save(searcher);
 
         // clean current
-        List<SkillsScore> currentSkills = skillsScoreRepository.findBySearcherId(searcher.getId());
-        currentSkills.stream().forEach((it -> skillsScoreRepository.delete(it)));
+        cleanSkillsBySearcherId(searcher.getId());
+        updateSearchersSkills(searcherRequest, searcher);
 
-        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
+        cleanContactInfoBySearcherId(searcherId);
+        updateSearcherContractInfo(searcherRequest, searcher);
 
-        skillsRequestList.stream().forEach(it -> {
-            Skill skill = skillRepo.getOne(it.getSkillId());
-            SkillsScore skillsScore = SkillsScore.builder()
-                    .score(it.getScore())
-                    .searcher(searcher)
-                    .skill(skill)
-                    .build();
-            skillsScoreRepository.save(skillsScore);
-        });
+        return SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
+    }
 
-        List<ContactInfoRequest> contactRequestList = searcherRequest.getContactInfos();
-
+    private void cleanContactInfoBySearcherId(Long searcherId) {
         List<Contact> currentContacts = contactRepository.findBySearcherId(searcherId);
         currentContacts.stream().forEach((it -> contactRepository.delete(it)));
+    }
 
+    private void updateSearcherContractInfo(SearcherRequest searcherRequest, Searcher searcher) {
+        List<ContactInfoRequest> contactRequestList = searcherRequest.getContactInfos();
         contactRequestList.stream().forEach(it -> {
             MessengerType messengerType = messengerTypeRepository.getOne(it.getMessengerTypeId());
             Contact contact = Contact.builder()
@@ -146,8 +113,19 @@ public class SearcherServiceImpl implements SearcherService {
                     .build();
             contactRepository.save(contact);
         });
+    }
 
-        return SearcherMapper.INSTANCE.SearcherToSearcherResponse(searcher);
+    private void updateSearchersSkills(SearcherRequest searcherRequest, Searcher searcher) {
+        List<SkillScoreRequest> skillsRequestList = searcherRequest.getSkills();
+        skillsRequestList.stream().forEach(it -> {
+            Skill skill = skillRepo.getOne(it.getSkillId());
+            SkillsScore skillsScore = SkillsScore.builder()
+                    .score(it.getScore())
+                    .searcher(searcher)
+                    .skill(skill)
+                    .build();
+            skillsScoreRepository.save(skillsScore);
+        });
     }
 
     @Transactional
@@ -161,16 +139,16 @@ public class SearcherServiceImpl implements SearcherService {
         }
 
         // clean current
-        List<SkillsScore> currentSkills = skillsScoreRepository.findBySearcherId(searcherId);
-        currentSkills.stream().forEach((it -> skillsScoreRepository.delete(it)));
-
-
-        List<Contact> currentContacts = contactRepository.findBySearcherId(searcherId);
-        currentContacts.stream().forEach((it -> contactRepository.delete(it)));
-
+        cleanSkillsBySearcherId(searcherId);
+        cleanContactInfoBySearcherId(searcherId);
 
         searcherRepository.delete(searcherOptional.get());
         return true;
+    }
+
+    private void cleanSkillsBySearcherId(long searcherId) {
+        List<SkillsScore> currentSkills = skillsScoreRepository.findBySearcherId(searcherId);
+        currentSkills.stream().forEach((it -> skillsScoreRepository.delete(it)));
     }
 
     @Override
@@ -188,7 +166,7 @@ public class SearcherServiceImpl implements SearcherService {
     private SearcherListItem searcherToSearcherResult(Searcher searcher) {
 
         SearcherListItem searcherListItem = new SearcherListItem();
-//
+
         // TOP 3 skill
         List<SkillResponse> skillResponseList = skillsScoreRepository
                 .findTop3BySearcherIdOrderByScoreDesc(searcher.getId()).stream()

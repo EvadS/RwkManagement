@@ -19,6 +19,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"addresses"})
 @Builder(toBuilder = true)
 public class Searcher extends Auditable<String> implements Serializable {
     @Id
