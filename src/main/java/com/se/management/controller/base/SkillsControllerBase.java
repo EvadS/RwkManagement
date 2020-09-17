@@ -61,7 +61,7 @@ public interface SkillsControllerBase {
             @RequestBody SkillRequest request);
 
     @ApiOperation(value = "Delete skill", nickname = "delete",
-            notes = "Update skill by id", tags = {})
+            notes = "Delete skill by id", tags = {})
     @DeleteMapping(value = "/{id}")
     ResponseEntity<SkillResponse> delete(
             @ApiParam(value = "skill unique identifier", required = true)

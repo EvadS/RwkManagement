@@ -9,6 +9,7 @@ import com.se.management.mapper.SkillScoreMapper;
 import com.se.management.model.request.ContactInfoRequest;
 import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.request.SkillScoreRequest;
+import com.se.management.model.response.SearcherInfoResponse;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
 import com.se.management.model.response.SkillResponse;
@@ -109,6 +110,9 @@ public class SearcherServiceImpl implements SearcherService {
         searcher.setReviewDate(searcherModel.getReviewDate());
         //searcher.setEmail(searcherModel.getEmail());
 
+        Address address = AddressMapper.INSTANCE.AddressRequestToAddress(searcherRequest.getAddressRequest());
+        searcher.getAddresses().add(address);
+
         searcherRepository.save(searcher);
 
         // clean current
@@ -164,6 +168,7 @@ public class SearcherServiceImpl implements SearcherService {
         List<Contact> currentContacts = contactRepository.findBySearcherId(searcherId);
         currentContacts.stream().forEach((it -> contactRepository.delete(it)));
 
+
         searcherRepository.delete(searcherOptional.get());
         return true;
     }
@@ -172,6 +177,11 @@ public class SearcherServiceImpl implements SearcherService {
     public Page<SearcherListItem> search(Pageable pageable) {
         return searcherRepository.findAll(pageable)
                 .map(this::searcherToSearcherResult);
+    }
+
+    @Override
+    public SearcherInfoResponse get(Long id) {
+        return null;
     }
 
     // TODO: SE move this code to map struct
