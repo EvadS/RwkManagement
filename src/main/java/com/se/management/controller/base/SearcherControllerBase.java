@@ -1,6 +1,7 @@
 package com.se.management.controller.base;
 
 import com.se.management.model.request.SearcherRequest;
+import com.se.management.model.response.SearcherInfoResponse;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
 import com.se.management.model.response.SkillResponse;
