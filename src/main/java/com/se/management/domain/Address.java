@@ -1,4 +1,5 @@
 package com.se.management.domain;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

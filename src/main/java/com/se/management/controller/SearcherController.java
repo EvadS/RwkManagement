@@ -6,7 +6,6 @@ import com.se.management.model.request.SearcherRequest;
 import com.se.management.model.response.SearcherInfoResponse;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
-import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.SkillSearch;
 import com.se.management.service.SearcherService;
 import org.slf4j.Logger;
@@ -68,42 +67,5 @@ public class SearcherController implements SearcherControllerBase {
         searcherService.deleteSearcher(id);
         return ResponseEntity.accepted().build();
     }
-
-//    @PostMapping()
-//    public ResponseEntity<SearcherResponse> createSearcher(@Valid @RequestBody  SearcherRequest searcherRequest) {
-//        logger.debug("Handle create request ");
-//
-
-//    }
-//
-//    @PutMapping(value = "/{id}")
-//    public ResponseEntity<SearcherResponse> updateSearcher(@PathVariable(value = "id") Long searcherId,
-//                                                              @Valid @RequestBody SearcherRequest searcherRequest) {
-//        logger.debug("Handle update request to searcher : {}", searcherId);
-//
-//        SearcherResponse response = searcherService.update(searcherId, searcherRequest);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//
-//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-//    public ResponseEntity searcherDelete(@PathVariable(value = "id") long id) {
-
-//    }
-//
-//    @GetMapping(value = "/search")
-//    public ResponseEntity<Page<SearcherListItem>> list(@RequestParam(required = false, defaultValue = "0") Integer page,
-//                                                       @RequestParam(required = false, defaultValue = "40") Integer limit,
-//                                                       @RequestParam(required = false, defaultValue = "") String filter) {
-
-//    }
-//
-//    // TODO: temporary
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ResponseBody
-//    String handleConstraintViolationException(ConstraintViolationException e) {
-//        return "not valid due to validation error: " + e.getMessage();
-//    }
 
 }

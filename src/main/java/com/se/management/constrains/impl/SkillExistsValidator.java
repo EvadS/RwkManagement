@@ -16,7 +16,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class SkillExistsValidator implements ConstraintValidator<MessengerTypeExists, Long> {
 
-    private final Logger logger = LoggerFactory.getLogger(MessengerTypeExists.class);
+    private final Logger logger = LoggerFactory.getLogger(SkillExistsValidator.class);
 
     private final SkillRepository skillRepository;
 

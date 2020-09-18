@@ -1,6 +1,5 @@
 package com.se.management.domain;
 
-
 import com.se.management.domain.base.Auditable;
 import lombok.*;
 
@@ -12,7 +11,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 
 @Getter
 @Setter
@@ -38,10 +36,10 @@ public class Searcher extends Auditable<String> implements Serializable {
     private Date reviewDate;
 
     @NotNull
-// TODO: for debug     @Email
     @Size(max = 100)
     @Column(unique = true)
     private String email;
+
 
     @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)

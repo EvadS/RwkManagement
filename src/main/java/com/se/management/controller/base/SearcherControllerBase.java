@@ -1,20 +1,16 @@
 package com.se.management.controller.base;
 
 import com.se.management.model.request.SearcherRequest;
-import com.se.management.model.response.SearcherInfoResponse;
 import com.se.management.model.response.SearcherListItem;
 import com.se.management.model.response.SearcherResponse;
 import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.SkillSearch;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -43,7 +39,7 @@ public interface SearcherControllerBase {
     @ApiOperation(value = "Search and paging",
             notes = "Filterable + sortable + pageable list", tags = {})
     @GetMapping("/search")
-    ResponseEntity<Page<SearcherListItem>> list (@NotNull final SkillSearch request, Pageable pageable);
+    ResponseEntity<Page<SearcherListItem>> list(@NotNull final SkillSearch request, Pageable pageable);
 
     @ApiOperation(value = "Searcher details", notes = "Searcher details by id", tags = {})
     @GetMapping(value = "/{id}")
@@ -54,11 +50,11 @@ public interface SearcherControllerBase {
 
     @ApiOperation(value = "Create searcher", nickname = "create",
             notes = "Create and save new searcher", tags = {})
-     @PostMapping
-     ResponseEntity<SearcherResponse> createSearcher(
+    @PostMapping
+    ResponseEntity<SearcherResponse> createSearcher(
             @Valid @RequestBody
             @ApiParam(value = "Information about new searcher", required = true)
-                     SearcherRequest searcherRequest) ;
+                    SearcherRequest searcherRequest);
 
 
     @ApiOperation(value = "Update searcher", nickname = "update",
@@ -69,7 +65,7 @@ public interface SearcherControllerBase {
             @PathVariable(value = "id") Long searcherId,
             @Valid @RequestBody
             @ApiParam(value = "Information about searcher", required = true)
-                    SearcherRequest searcherRequest) ;
+                    SearcherRequest searcherRequest);
 
 
     @ApiOperation(value = "Delete searcher", nickname = "delete",

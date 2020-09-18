@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class MessengerTypeExistsValidator implements ConstraintValidator<MessengerTypeExists, Long> {
 
-    private final Logger logger = LoggerFactory.getLogger(MessengerTypeExists.class);
+    private final Logger logger = LoggerFactory.getLogger(MessengerTypeExistsValidator.class);
 
     private final MessengerTypeRepository messengerTypeRepository;
 

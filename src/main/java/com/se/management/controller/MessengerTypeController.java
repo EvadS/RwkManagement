@@ -3,7 +3,6 @@ package com.se.management.controller;
 import com.se.management.controller.base.MessengerTypeControllerBase;
 import com.se.management.model.request.MessengerTypeRequest;
 import com.se.management.model.response.MessengerTypeResponse;
-import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.MessengerTypeSearch;
 import com.se.management.service.MessengerTypeService;
 import org.springframework.data.domain.Page;
