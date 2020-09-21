@@ -18,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SkillServiceImp implements SkillService {
@@ -94,5 +96,11 @@ public class SkillServiceImp implements SkillService {
     public Page<SkillResponse> filter(SkillSearch request, @PageableDefault(page = 0, size = 10) Pageable pageable) {
         return skillRepository.findAll(skillSpecification.getFilter(request), pageable)
                 .map(SkillMapper.INSTANCE::SkillToSkillResponse);
+    }
+
+    @Override
+    public List<SkillResponse> list() {
+        return skillRepository.findAll().stream()
+                .map(SkillMapper.INSTANCE::SkillToSkillResponse).collect(Collectors.toList());
     }
 }

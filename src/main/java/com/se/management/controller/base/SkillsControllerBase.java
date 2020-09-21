@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Api(value = "Skill api management")
@@ -37,6 +38,17 @@ public interface SkillsControllerBase {
     @GetMapping("/search")
     ResponseEntity<Page<SkillResponse>> filter(@NotNull final SkillSearch request, Pageable pageable);
 
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved paged skills list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
+    @ApiOperation(value = "Skills",
+            notes = "Get all skills", tags = {})
+    @GetMapping("/list")
+    ResponseEntity<List<SkillResponse>> getAll();
 
     @ApiOperation(value = "Skill details", notes = "Skill details by id", tags = {})
     @GetMapping(value = "/{id}")

@@ -6,6 +6,8 @@ import com.se.management.model.response.SkillResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface SkillService {
     SkillResponse getById(Long skillId);
 
@@ -16,4 +18,6 @@ public interface SkillService {
     boolean delete(Long skillId);
 
     Page<SkillResponse> filter(SkillSearch request, Pageable pageable);
+
+    List<SkillResponse> list();
 }
