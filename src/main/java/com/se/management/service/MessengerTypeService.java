@@ -7,6 +7,8 @@ import com.se.management.model.search.MessengerTypeSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface MessengerTypeService {
 
     Page<MessengerTypeResponse> filter(MessengerTypeSearch request, Pageable pageable);
@@ -18,4 +20,6 @@ public interface MessengerTypeService {
     MessengerTypeResponse update(Long id, MessengerTypeRequest request);
 
     void delete(Long id);
+
+    List<MessengerTypeResponse> list();
 }

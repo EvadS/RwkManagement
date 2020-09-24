@@ -2,6 +2,7 @@ package com.se.management.controller.base;
 
 import com.se.management.model.request.MessengerTypeRequest;
 import com.se.management.model.response.MessengerTypeResponse;
+import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.MessengerTypeSearch;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Api(value = "Messengers api management.")
 public interface MessengerTypeControllerBase {
@@ -35,6 +37,11 @@ public interface MessengerTypeControllerBase {
             notes = "Filterable + sortable + pageable list", tags = {})
     @GetMapping("/search")
     ResponseEntity<Page<MessengerTypeResponse>> filter(@NotNull final MessengerTypeSearch request, Pageable pageable);
+
+    @ApiOperation(value = "Messengers",
+            notes = "Get all messengers", tags = {})
+    @GetMapping("/list")
+    ResponseEntity<List<MessengerTypeResponse>> getAll();
 
 
     @ApiOperation(value = "Messenger details", notes = "Messenger details by id", tags = {})

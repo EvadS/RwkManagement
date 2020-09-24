@@ -1,54 +1,38 @@
 package com.se.management.service;
 
-import com.se.management.domain.RoleEntity;
-import com.se.management.domain.UserEntity;
-import com.se.management.repository.RoleEntityRepository;
-import com.se.management.repository.UserEntityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.se.management.domain.User;
+import com.se.management.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserEntityRepository userEntityRepository;
+    private static final String DEFAULT_ROLE = "ROLE_USER";
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder encoder;
 
-    @Autowired
-    private RoleEntityRepository roleEntityRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    /**
-     * save user
-     * @param userEntity
-     * @return
-     */
-    public UserEntity saveUser(UserEntity userEntity) {
-        RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
-        userEntity.setRoleEntity(userRole);
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-
-        return userEntityRepository.save(userEntity);
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
-    /**
-     * сначала достаю пользователя по логину а потом проверяю совпадает ли пароль в базе с паролем, который пришел на вход метода.
-     * @param login
-     * @return
-     */
-    public UserEntity findByLogin(String login) {
-        return userEntityRepository.findByLogin(login);
+    public User register(User user) {
+        setPasswordAndRole(user);
+        return userRepository.save(user);
     }
 
-    public UserEntity findByLoginAndPassword(String login, String password) {
-        UserEntity userEntity = findByLogin(login);
-        if (userEntity != null) {
-            if (passwordEncoder.matches(password, userEntity.getPassword())) {
-                return userEntity;
-            }
-        }
-        return null;
+    private void setPasswordAndRole(User user) {
+        user.getUserCredentials()
+                .setPassword(encoder.encode(user.getUserCredentials().getPassword()));
+        user.getUserCredentials().setRole(DEFAULT_ROLE);
     }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUserCredentialsUsername(username);
+    }
+
 }

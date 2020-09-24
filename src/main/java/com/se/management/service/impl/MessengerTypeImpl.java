@@ -4,8 +4,10 @@ import com.se.management.domain.MessengerType;
 import com.se.management.exception.EntityAlreadyExistsException;
 import com.se.management.exception.SkillNotFoundException;
 import com.se.management.mapper.MessengerTypeMapper;
+import com.se.management.mapper.SkillMapper;
 import com.se.management.model.request.MessengerTypeRequest;
 import com.se.management.model.response.MessengerTypeResponse;
+import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.MessengerTypeSearch;
 import com.se.management.repository.MessengerTypeRepository;
 import com.se.management.repository.specification.MessengerTypeSpecification;
@@ -17,7 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MessengerTypeImpl implements MessengerTypeService {
@@ -97,5 +101,11 @@ return null;
         messengerRepo.delete(messengerTypeOpt.get());
 
         logger.debug("Messenger id : {} has been deleted.",id);
+    }
+
+    @Override
+    public List<MessengerTypeResponse> list() {
+        return messengerRepo.findAll().stream()
+                .map(MessengerTypeMapper.INSTANCE::MessengerToMessengerTypeResponse).collect(Collectors.toList());
     }
 }

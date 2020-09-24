@@ -3,6 +3,7 @@ package com.se.management.controller;
 import com.se.management.controller.base.MessengerTypeControllerBase;
 import com.se.management.model.request.MessengerTypeRequest;
 import com.se.management.model.response.MessengerTypeResponse;
+import com.se.management.model.response.SkillResponse;
 import com.se.management.model.search.MessengerTypeSearch;
 import com.se.management.service.MessengerTypeService;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @RestController
@@ -30,6 +32,13 @@ public class MessengerTypeController implements MessengerTypeControllerBase {
     public ResponseEntity<Page<MessengerTypeResponse>> filter(@NotNull MessengerTypeSearch request, Pageable pageable) {
         Page<MessengerTypeResponse> responsePage = messengerTypeService.filter(request, pageable);
         return ResponseEntity.ok(responsePage);
+    }
+
+    @Override
+    public ResponseEntity<List<MessengerTypeResponse>> getAll() {
+
+        List<MessengerTypeResponse> messengerTypeResponseList = messengerTypeService.list();
+        return ResponseEntity.ok(messengerTypeResponseList);
     }
 
     @Override

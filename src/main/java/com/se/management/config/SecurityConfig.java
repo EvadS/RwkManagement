@@ -1,41 +1,56 @@
 package com.se.management.config;
 
 
-import com.se.management.config.jwt.JwtFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import javax.servlet.http.HttpServletResponse;
+import java.time.Clock;
 
 @EnableWebSecurity
-@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    private final TokenProperties tokenProperties;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper;
+
+//    @Value("${cors.enabled:false}")
+    private boolean corsEnabled = true;
+
+    public SecurityConfig(TokenProperties tokenProperties,
+                          BCryptPasswordEncoder passwordEncoder,
+                          CustomUserDetailsService userDetailsService,
+                          ObjectMapper objectMapper) {
+        this.tokenProperties = tokenProperties;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .httpBasic().disable()
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        applyCors(httpSecurity)
                 .csrf().disable()
-                //будет управлять сессией юзера в системе спринг секюрит
-                // Так как я буду авторизировать пользователя по токену, мне не нужно создавать и хранить для него сессию.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedResponse())
+                .and()
                 .authorizeRequests()
-                // TODO: Skiea for debug  -->
-                .antMatchers("/searcher","/searcher*","/searcher/**").permitAll()
-                .antMatchers("/skills","/skills*","/skills/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
+                // for test
                 .antMatchers("/messenger","/messenger*","/messenger/*").permitAll()
-                // <---
-                .antMatchers("/register", "/auth").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
@@ -48,13 +63,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/images//",
                         "/webjars/**")
                 .permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private HttpSecurity applyCors(HttpSecurity httpSecurity) throws Exception {
+        if (corsEnabled) {
+            return httpSecurity.cors().and();
+        } else {
+            return httpSecurity;
+        }
+    }
+
+    private AuthenticationEntryPoint unauthorizedResponse() {
+        return (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 }

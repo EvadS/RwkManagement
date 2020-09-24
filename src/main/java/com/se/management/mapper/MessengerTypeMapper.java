@@ -13,4 +13,6 @@ public interface MessengerTypeMapper {
     MessengerTypeResponse MessengerTypeToMessengerTypeResponse(MessengerType messengerType);
 
     MessengerType MessengerTypeRequestToMessengerType(MessengerTypeRequest request);
+
+    MessengerTypeResponse MessengerToMessengerTypeResponse(MessengerType messengerType);
 }
