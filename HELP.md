@@ -72,4 +72,17 @@ start as a java application
 
 при удалении соискателя нужно удалить все значения скилов по уровням
 
+create user 
+http://localhost:8000/api/users
+{
+	"username":"evad2",
+	"password":"123456"
+}
 
+
+http://localhost:8000/api/login
+
+{
+	"username":"evad2",
+	"password":"123456"
+}

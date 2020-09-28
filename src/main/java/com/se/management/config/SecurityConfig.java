@@ -24,33 +24,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProperties tokenProperties;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CustomUserDetailsService userDetailsService;
-    private final ObjectMapper objectMapper;
 
-//    @Value("${cors.enabled:false}")
-    private boolean corsEnabled = true;
+    @Value("${cors.enabled:false}")
+    private boolean corsEnabled;
+
 
     public SecurityConfig(TokenProperties tokenProperties,
                           BCryptPasswordEncoder passwordEncoder,
-                          CustomUserDetailsService userDetailsService,
-                          ObjectMapper objectMapper) {
+                          CustomUserDetailsService userDetailsService) {
         this.tokenProperties = tokenProperties;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.objectMapper = objectMapper;
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+
         applyCors(httpSecurity)
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedResponse())
                 .and()
+                .logout()
+                .and()
+                .addFilter(new AuthenticationFilter(authenticationManagerBean(), tokenProperties))
+                .addFilterAfter(new AuthorizationFilter(tokenProperties), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, tokenProperties.getLoginPath()).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users").permitAll()
-                // for test
-                .antMatchers("/messenger","/messenger*","/messenger/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .antMatchers("/api/users/**").hasRole("ADMIN")
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
@@ -64,7 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**")
                 .permitAll()
                 .antMatchers("/api/**").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and()
+                .logout()
+        ;
     }
 
     private HttpSecurity applyCors(HttpSecurity httpSecurity) throws Exception {
@@ -83,4 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
+
+
 }
