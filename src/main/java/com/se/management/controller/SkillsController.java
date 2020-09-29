@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 //TODO: check 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200","http://localhost:4201"})
 @RequestMapping("/skills")
 public class SkillsController implements SkillsControllerBase {
     private final SkillService skillService;

@@ -68,10 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**")
                 .permitAll()
                 .antMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .logout()
-        ;
+                .anyRequest().permitAll();
     }
 
     private HttpSecurity applyCors(HttpSecurity httpSecurity) throws Exception {
