@@ -1,6 +1,6 @@
 package com.se.management.model.request;
 
-import com.se.management.constrains.MessengerTypeExists;
+import com.se.management.validation.annotation.MessengerTypeExists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

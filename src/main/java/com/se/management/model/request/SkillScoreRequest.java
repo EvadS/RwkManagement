@@ -1,6 +1,6 @@
 package com.se.management.model.request;
 
-import com.se.management.constrains.SkillTypeExists;
+import com.se.management.validation.annotation.SkillTypeExists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

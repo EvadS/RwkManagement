@@ -86,3 +86,18 @@ http://localhost:8000/api/login
 	"username":"evad2",
 	"password":"123456"
 }
+
+#Docker 
+build the docker image 
+```bash
+docker build -t spring-boot-rwr .
+```
+ You can now see the list of all the docker images on your system using the following command 
+ ```bash
+    docker image ls
+```
+ Running the docker image
+ 
+ ```bash
+ docker run -p 5000:8000 spring-boot-rwr
+```

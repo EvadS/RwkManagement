@@ -1,6 +1,6 @@
 package com.se.management.domain;
 
-import com.se.management.domain.base.Auditable;
+import com.se.management.model.audit.Audible;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString(exclude = {"addresses"})
 @Builder(toBuilder = true)
-public class Searcher extends Auditable<String> implements Serializable {
+public class Searcher extends Audible<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
