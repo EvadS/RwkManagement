@@ -101,3 +101,9 @@ docker build -t spring-boot-rwr .
  ```bash
  docker run -p 5000:8000 spring-boot-rwr
 ```
+
+
+command line run 
+```bash
+java -jar  target/rwr-app.jar --MAIL_PASSWORD=31323334
+```
