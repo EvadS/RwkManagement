@@ -2,13 +2,32 @@ package com.se.management.service.impl;
 
 import com.se.management.domain.EmailVerificationToken;
 import com.se.management.domain.User;
+import com.se.management.exception.InvalidTokenRequestException;
+import com.se.management.model.TokenStatus;
+import com.se.management.repository.EmailVerificationTokenRepository;
 import com.se.management.service.EmailVerificationTokenService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmailVerificationTokenServiceImpl implements EmailVerificationTokenService {
+
+    private static final Logger logger = Logger.getLogger(EmailVerificationTokenService.class);
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    @Value("${app.token.email.verification.duration}")
+    private Long emailVerificationTokenExpiryDuration;
+
+
+    public EmailVerificationTokenServiceImpl(EmailVerificationTokenRepository emailVerificationTokenRepository) {
+        this.emailVerificationTokenRepository = emailVerificationTokenRepository;
+    }
+
     /**
      * Create an email verification token and persist it in the database which will be
      * verified by the user
@@ -18,6 +37,13 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public void createVerificationToken(User user, String token) {
+        EmailVerificationToken emailVerificationToken = new EmailVerificationToken();
+        emailVerificationToken.setToken(token);
+        emailVerificationToken.setTokenStatus(TokenStatus.STATUS_PENDING);
+        emailVerificationToken.setUser(user);
+        emailVerificationToken.setExpiryDate(Instant.now().plusMillis(emailVerificationTokenExpiryDuration));
+        logger.info("Generated Email verification token [" + emailVerificationToken + "]");
+        emailVerificationTokenRepository.save(emailVerificationToken);
 
     }
 
@@ -28,7 +54,10 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public EmailVerificationToken updateExistingTokenWithNameAndExpiry(EmailVerificationToken existingToken) {
-        return null;
+        existingToken.setTokenStatus(TokenStatus.STATUS_PENDING);
+        existingToken.setExpiryDate(Instant.now().plusMillis(emailVerificationTokenExpiryDuration));
+        logger.info("Updated Email verification token [" + existingToken + "]");
+        return save(existingToken);
     }
 
     /**
@@ -38,7 +67,7 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public Optional<EmailVerificationToken> findByToken(String token) {
-        return Optional.empty();
+        return emailVerificationTokenRepository.findByToken(token);
     }
 
     /**
@@ -48,7 +77,7 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public EmailVerificationToken save(EmailVerificationToken emailVerificationToken) {
-        return null;
+        return emailVerificationTokenRepository.save(emailVerificationToken);
     }
 
     /**
@@ -56,7 +85,7 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public String generateNewToken() {
-        return null;
+        return UUID.randomUUID().toString();
     }
 
     /**
@@ -67,6 +96,8 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
      */
     @Override
     public void verifyExpiration(EmailVerificationToken token) {
-
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+            throw new InvalidTokenRequestException("Email Verification Token", token.getToken(), "Expired token. Please issue a new request");
+        }
     }
 }

@@ -203,7 +203,6 @@ public class AuthController {
             "updated response tokens")
     public ResponseEntity refreshJwtToken(@ApiParam(value = "The TokenRefreshRequest payload")
                                               @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
-
         return authService.refreshJwtToken(tokenRefreshRequest)
                 .map(updatedToken -> {
                     String refreshToken = tokenRefreshRequest.getRefreshToken();

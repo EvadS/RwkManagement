@@ -29,8 +29,8 @@ public class SwaggerConfig {
     // Describe your apis
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Sessions APIs")
-                .description("This page lists all user session management.")
+                .title("Rwr backend  APIs")
+                .description("This page lists all rwr session management.")
                 .version("1.0-SNAPSHOT")
                 .build();
     }

@@ -104,6 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/images//",
                         "/webjars/**")
                 .permitAll()
+                .antMatchers("/**/api/auth/**").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
 
