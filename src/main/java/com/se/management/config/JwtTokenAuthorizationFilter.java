@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.se.management.config.jwt.JwtTokenProvider;
 import com.se.management.model.request.LoginRequest;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,10 @@ import java.util.Collections;
 
 
 public class JwtTokenAuthorizationFilter extends UsernamePasswordAuthenticationFilter {
+
+    @Value("${security.jwt.secret:JwtSecretKey}")
+    private String secret = "secret";
+
     private final ObjectMapper objectMapper;
     private final AuthenticationManager authManager;
     private final JwtTokenProvider tokenProvider;
@@ -67,7 +74,11 @@ public class JwtTokenAuthorizationFilter extends UsernamePasswordAuthenticationF
                                             FilterChain chain,
                                             Authentication auth) {
 
-        String token = tokenProvider.createToken(auth);
+        String token = tokenProvider.generateToken(auth);
+
+      Claims lst =   Jwts.parser().setSigningKey(secret)
+                .parseClaimsJws(token).getBody();
+
         response.addHeader(tokenProvider.getHeader(), tokenProvider.getPrefix() + token);
     }
 }

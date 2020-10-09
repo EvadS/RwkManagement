@@ -73,25 +73,25 @@ public class AuthController {
     /**
      * Entry point for the user log in. Return the jwt auth token and the refresh token
      */
-    @PostMapping("/login")
-    @ApiOperation(value = "Logs the user in to the system and return the auth tokens")
-    public ResponseEntity authenticateUser(@ApiParam(value = "The LoginRequest payload") @Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authService.authenticateUser(loginRequest)
-                .orElseThrow(() -> new UserLoginException("Couldn't login user [" + loginRequest + "]"));
-
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        logger.info("Logged in User returned [API]: " + customUserDetails.getUsername());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return authService.createAndPersistRefreshTokenForDevice(authentication, loginRequest)
-                .map(RefreshToken::getToken)
-                .map(refreshToken -> {
-                    String jwtToken = authService.generateToken(customUserDetails);
-                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration()));
-                })
-                .orElseThrow(() -> new UserLoginException("Couldn't create refresh token for: [" + loginRequest + "]"));
-    }
+//    @PostMapping("/login")
+//    @ApiOperation(value = "Logs the user in to the system and return the auth tokens")
+//    public ResponseEntity authenticateUser(@ApiParam(value = "The LoginRequest payload") @Valid @RequestBody LoginRequest loginRequest) {
+//
+//        Authentication authentication = authService.authenticateUser(loginRequest)
+//                .orElseThrow(() -> new UserLoginException("Couldn't login user [" + loginRequest + "]"));
+//
+//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//        logger.info("Logged in User returned [API]: " + customUserDetails.getUsername());
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        return authService.createAndPersistRefreshTokenForDevice(authentication, loginRequest)
+//                .map(RefreshToken::getToken)
+//                .map(refreshToken -> {
+//                    String jwtToken = authService.generateToken(customUserDetails);
+//                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration()));
+//                })
+//                .orElseThrow(() -> new UserLoginException("Couldn't create refresh token for: [" + loginRequest + "]"));
+//    }
 
     /**
      * Entry point for the user registration process. On successful registration,

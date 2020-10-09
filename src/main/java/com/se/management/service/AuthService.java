@@ -50,9 +50,9 @@ public interface AuthService {
                                   UpdatePasswordRequest updatePasswordRequest);
 
     /**
-     * Generates a JWT token for the validated client
-     */
-    String generateToken(CustomUserDetails customUserDetails);
+//     * Generates a JWT token for the validated client
+//     */
+//    String generateToken(CustomUserDetails customUserDetails);
 
     /**
      * Creates and persists the refresh token for the user device. If device exists

@@ -134,10 +134,10 @@ public class AuthServiceImpl implements AuthService {
         return Optional.of(currentUser);
     }
 
-    @Override
-    public String generateToken(CustomUserDetails customUserDetails) {
-        return tokenProvider.generateToken(customUserDetails);
-    }
+//    @Override
+//    public String generateToken(CustomUserDetails customUserDetails) {
+//        return tokenProvider.generateToken(customUserDetails);
+//    }
 
     /**
      * Generates a JWT token for the validated client by userId

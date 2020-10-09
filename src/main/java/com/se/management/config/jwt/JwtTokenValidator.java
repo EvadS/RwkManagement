@@ -29,16 +29,13 @@ import java.util.Date;
 public class JwtTokenValidator {
 
     private static final Logger logger = Logger.getLogger(JwtTokenValidator.class);
-
-
+    private final String jwtSecret;
     private final LoggedOutJwtTokenCache loggedOutTokenCache;
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
-    private String jwtSecret;
-
     @Autowired
-    public JwtTokenValidator( LoggedOutJwtTokenCache loggedOutTokenCache) {
-           this.loggedOutTokenCache = loggedOutTokenCache;
+    public JwtTokenValidator(@Value("${app.jwt.secret}") String jwtSecret, LoggedOutJwtTokenCache loggedOutTokenCache) {
+        this.jwtSecret = jwtSecret;
+        this.loggedOutTokenCache = loggedOutTokenCache;
     }
 
     /**
