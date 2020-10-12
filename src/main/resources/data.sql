@@ -1,6 +1,7 @@
 --Add initial role
-INSERT INTO ROLE (ROLE_NAME) VALUES ('ROLE_USER');
-INSERT INTO ROLE (ROLE_NAME) VALUES ('ROLE_ADMIN');
+INSERT INTO `rwr-db`.`role_table` (`role_name`) VALUES ('ROLE_USER');
+INSERT INTO `rwr-db`.`role_table` (`role_name`) VALUES ('ROLE_ADMIN');
+
 
 
 

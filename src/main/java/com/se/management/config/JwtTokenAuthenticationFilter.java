@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -44,6 +46,9 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger log = Logger.getLogger(JwtTokenAuthenticationFilter.class);
 
     @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
     private final JwtTokenProvider jwtTokenProvider;
 
     public JwtTokenAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
@@ -51,41 +56,28 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
-                                    HttpServletResponse httpServletResponse,
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
 
-            try {
-                String jwt = getJwtFromRequest(httpServletRequest);
+        try {
+            String jwt = getJwtFromRequest(request);
 
-                if (StringUtils.hasText(jwt) && jwtTokenValidator.validateToken(jwt)) {
-                   // Long userId = jwtTokenProvider.getUserIdFromJWT(jwt);
+            if (StringUtils.hasText(jwt) && jwtTokenValidator.validateToken(jwt)) {
+                Long userId = jwtTokenProvider.getUserIdFromJWT(jwt);
 
-                    Claims claims = Jwts.parser()
-                            .setSigningKey(jwtTokenProvider.getSecret())
-                            .parseClaimsJws(jwt)
-                            .getBody();
-
-                    Jwts.parser().setSigningKey(
-                            jwtTokenProvider.getSecret())
-                            .parseClaimsJws(jwt).getBody();
-
-                    String username = claims.getSubject();
-
-                    @SuppressWarnings("unchecked")
-                    List<String> authorities = jwtTokenProvider.getRoles(jwt);
-                }
-
-            } catch (Exception ex) {
-                log.error("Failed to set user authentication in security context: ", ex);
-                throw ex;
+                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, jwt, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (Exception ex) {
+            log.error("Failed to set user authentication in security context: ", ex);
+            throw ex;
+        }
 
-
-     //   goToNextFilter(httpServletRequest, httpServletResponse, filterChain);
-
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        filterChain.doFilter(request, response);
     }
 
 

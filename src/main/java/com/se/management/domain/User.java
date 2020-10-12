@@ -79,7 +79,8 @@ public class User  extends EntityAuditorAware {
     }
 
     public void addRoles(Set<Role> roles) {
-        roles.forEach(this::addRole);
+        roles.addAll(roles);
+        //roles.forEach(this::addRole);
     }
 
     public void removeRole(Role role) {
