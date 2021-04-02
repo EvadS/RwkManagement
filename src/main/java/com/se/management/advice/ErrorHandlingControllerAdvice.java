@@ -179,7 +179,4 @@ class ErrorHandlingControllerAdvice   extends ResponseEntityExceptionHandler {
     public ApiResponse handlePasswordResetException(PasswordResetException ex, WebRequest request) {
         return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
     }
-
-
-
 }
